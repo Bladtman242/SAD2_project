@@ -1,0 +1,31 @@
+\documentclass[a4paper, titlepage]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage{courier} % Required for the courier font
+\usepackage[bookmarks]{hyperref}
+
+%redefine percentage sign to be a little smaller
+\let\oldpct\%
+\renewcommand{\%}{\scalebox{.9}{\oldpct}}
+\begin{document}
+
+\title{Problem Description}
+\author{
+	Radoslaw Niemczyk
+	\\\texttt{radn@itu.dk}
+	\and
+	Sigurt Bladt Dinesen
+	\\\texttt{sidi@itu.dk}
+}
+
+\maketitle
+
+%\tableofcontents
+
+\section*{Sorting a large data set}
+This project is concerned with lexical sorting of a large data set.
+In particular, we will explore the use of parallelization techniques, as well as
+randomization and approximation, for sorting a stream of data --- i.e. online sorting algorithms.
+
+\end{document}
+
