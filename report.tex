@@ -22,10 +22,41 @@
 
 %\tableofcontents
 
-\section*{Sorting a large data set}
-This project is concerned with lexical sorting of a large data set.
-In particular, we will explore the use of parallelization techniques, as well as
-randomization and approximation, for sorting a stream of data --- i.e. online sorting algorithms.
+\section*{Ranking a large data set}
+Ranking has become an increasingly important problem, with ever-growing datasets
+both in the industry and in academia, the ability to work with large ranked
+sets, and to do so fast.
+
+Ranking is used commercially to provide costumers with proposed subsets of
+products, to make it easier to choose a product of interest.
+
+This project is concerned with sorting a large set of user rankings.
+In particular, we will explore the use of the following techniques:
+
+\begin{description}
+	\item[Parallelization] 
+
+	\item[Randomization] 
+
+	\item[Approximation] We would like to explore the possibility of
+		performing an approximate sort. User--provided rankings are
+		often inconsistent. For instance, if a user ranks a move $m$
+		lower than a movie $m'$, does that mean he liked $m$ less, or
+		that he likes that genre less? It is unclear weather or not the
+		scale is linear, and the same user may have different
+		experiences on different days. This means that an \textit{exact}
+		ordering might not be necessary. If it provides a speedup, it
+		may be well worth it to perform a partial sorting of the
+		rankings --- such that a top--ten might really be a top--eight,
+		plus 12 and 14.
+
+	\item[Online sorting] There are several possible benefits from online
+		sorting. For slow data sources it may result in a speedup,
+		exploiting the efficiency of certain sorting algorithms when
+		dealing with partially ordered data, to lessen the time spend
+		waiting for the data. The 
+
+\end{description}
 
 \end{document}
 
