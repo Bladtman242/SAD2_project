@@ -27,16 +27,19 @@ Ranking has become an increasingly important problem, with ever-growing datasets
 both in the industry and in academia, the ability to work with large ranked
 sets, and to do so fast.
 
-Ranking is used commercially to provide costumers with proposed subsets of
-products, to make it easier to choose a product of interest.
+Ranking is used commercially to provide customers with proposed subsets of
+products, to make it easier to choose a product of interest. For this it might
+be valuable to have the entire set of products ordered by rank, but it may be
+sufficient to have a \textit{top-n} list, of the $n$ highest (and/or lowest)
+ranked items. 
 
-This project is concerned with sorting a large set of user rankings.
-In particular, we will explore the use of the following techniques:
+This project is concerned with sorting a large set of user rankings. Following
+is a list of techniques that we deem promising, and would like to explore the
+effectiveness of:
 
 \begin{description}
-	\item[Parallelization] 
-
-	\item[Randomization] 
+	\item[Parallelization] The use of parallelized sorting algorithms, such
+		as parallelized merge- or radix- sort.
 
 	\item[Approximation] We would like to explore the possibility of
 		performing an approximate sort. User--provided rankings are
@@ -50,13 +53,19 @@ In particular, we will explore the use of the following techniques:
 		rankings --- such that a top--ten might really be a top--eight,
 		plus 12 and 14.
 
-	\item[Online sorting] There are several possible benefits from online
-		sorting. For slow data sources it may result in a speedup,
-		exploiting the efficiency of certain sorting algorithms when
-		dealing with partially ordered data, to lessen the time spend
-		waiting for the data. The 
+	\item[Online sorting] Sorting is an inherently offline problem --- you
+		can not sort a set without having all the values. However, for
+		problems where the full data set is not immediately available,
+		onlineness can be achieved, or approximated, by sorting partial
+		data sets, and then in the end sorting the whole. Exploiting the
+		efficiency of certain sorting algorithms when dealing with
+		partially ordered data, to lessen the time spend waiting for the
+		data. 
 
 \end{description}
 
 \end{document}
+
+
+
 
