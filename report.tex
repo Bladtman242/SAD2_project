@@ -22,20 +22,35 @@
 
 %\tableofcontents
 
-\section*{Ranking a large data set}
+\section*{Ordering movie ratings in a dynamic setting}
 Ranking has become an increasingly important problem, with ever-growing datasets
-both in the industry and in academia, the ability to work with large ranked
-sets, and to do so fast.
+both in the industry and in academia.
 
 Ranking is used commercially to provide customers with proposed subsets of
 products, to make it easier to choose a product of interest. For this it might
 be valuable to have the entire set of products ordered by rank, but it may be
-sufficient to have a \textit{top-n} list, of the $n$ highest (and/or lowest)
-ranked items. 
+sufficient to have a \textit{top-n} list, of the $m$ highest (and/or lowest)
+ranked items.
 
-This project is concerned with sorting a large set of user rankings. Following
-is a list of techniques that we deem promising, and would like to explore the
-effectiveness of:
+In a static setting, where the data does not evolve over time, this has several
+simple solutions: sorting the full data set, or probing for the $m$ largest
+elements. In a dynamic setting however, were the data evolves over time, those
+solutions would need to be re-run to maintain current solutions. Hence, there
+may be better solutions that evolve the solutions as the data evolves, or is
+based on approximation.
+
+To motivate our approach, we present it through the following concrete problem:
+A service maintains a list of movies, and lets users rank movies on some scale
+(say $[1,10]\in N$). We want to provide an ordered set of the best $m$ out of
+$m$ movies were $m\leq n$ (In particular, $m$ might be equal to $n$).
+In this setting, we want to explore trade-offs between memory consumption,
+correctness, and  currency. In particular it should be possible to achieve a
+memory bound lower than $m$ by sacrificing correctness, achieve both by
+sacrificing currency, i.e. allowing the output to become somewhat outdated as
+the underlying data set evolves.
+
+Following is a list of techniques that we deem promising, and would like to
+explore the effectiveness of:
 
 \begin{description}
 	\item[Parallelization] The use of parallelized sorting algorithms, such
@@ -60,9 +75,13 @@ effectiveness of:
 		data sets, and then in the end sorting the whole. Exploiting the
 		efficiency of certain sorting algorithms when dealing with
 		partially ordered data, to lessen the time spend waiting for the
-		data. 
+		data.
 
 \end{description}
+
+\input{./onlinesort.tex}
+
+\input{./streamingsampling.tex}
 
 \end{document}
 

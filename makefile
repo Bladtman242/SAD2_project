@@ -5,7 +5,7 @@ tmpdir = tmp
 $(outputFile): $(tmpdir)/$(outputFile)
 	cp $< $@
 
-$(tmpdir)/$(outputFile): $(inputFile) $(tmpdir)
+$(tmpdir)/$(outputFile): $(inputFile) *.tex $(tmpdir)
 	pdflatex -output-directory=tmp $<
 	pdflatex -output-directory=tmp $<
 
