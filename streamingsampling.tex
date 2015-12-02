@@ -1,2 +1,42 @@
-\section*{Streaming}
-lolol
+\section*{A Stream Based Approach}
+Streaming algorithms provide excellent solutions to many problems where data
+sets are large enough that we wish (or need) to sacrifice correctness for low
+memory usage and time consumption.
+From \texttt{Ikonomovska\--Zelke}:
+\begin{quote}
+Streaming algorithms drop the demand of random access to the input. Rather, the input
+is assumed to arrive in arbitrary order as an input stream. Moreover, streaming algorithms
+are designed to settle for a working memory that is much smaller than the size of the input.
+\end{quote}
+To be precise, they require that the size of the working memory is sublinear in both the cardinality of the stream and the universe.
+Due to this nature of streaming algorithms they are not commonly used for
+problems that require analysing parts of non-constant, non-parameterized size
+of the data set, for each given input. Hence an approach to
+solve our problem --- sorting -- based on streaming algorithms will provide some interesting
+trade-offs.
+
+We begin with a definition of our stream, and a simple algorithm for our
+problem. Our input is a turnstile stream. The universe
+$U$ is the set of movies in our database, and each stream item is a pair
+$(j,r) \in U\times \left(\left[1,10\right]\cap \mathbb{N}\right)$.
+With our definition of movie ranks the turnstile stream is strict, and furthermore
+the rank $r$ for every element is positive. This is not a necessary restriction
+however.
+
+The simplest algorithm to solve our problem is then simply calculating the
+frequency vector for the stream, and sort it when our algorithm is queried.
+However, this algorithm is not very satisfactory. The working memory is
+sublinear in the cardinality of the stream, but not in the universe size. It
+does not provide a current solution either, as we have to sort the frequency
+vector when queried. On the positive side, the solution provided by the
+algorithm is correct.
+
+\begin{itemize}
+	\item{Maintaining ordering with each item (probably based on b-tree or
+		binary-heap or similar idea)}
+	\item{Approximation based on sampling (at least two approaches: sample
+		movies (dangerous) or sample ratings (less dangerous, but
+	provides no adv. wrt working memory))}
+	\item{Maybe sketching/hashing approach to approximation ?}
+\end{itemize}
+

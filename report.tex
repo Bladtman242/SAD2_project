@@ -3,6 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{courier} % Required for the courier font
 \usepackage[bookmarks]{hyperref}
+\usepackage{amsfonts}
 
 %redefine percentage sign to be a little smaller
 \let\oldpct\%
@@ -41,7 +42,7 @@ based on approximation.
 
 To motivate our approach, we present it through the following concrete problem:
 A service maintains a list of movies, and lets users rank movies on some scale
-(say $[1,10]\in N$). We want to provide an ordered set of the best $m$ out of
+(say $\left[1,10\right]\cap \mathbb{N}$). We want to provide an ordered set of the best $m$ out of
 $m$ movies were $m\leq n$ (In particular, $m$ might be equal to $n$).
 In this setting, we want to explore trade-offs between memory consumption,
 correctness, and  currency. In particular it should be possible to achieve a
