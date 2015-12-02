@@ -19,9 +19,8 @@ We begin with a definition of our stream, and a simple algorithm for our
 problem. Our input is a turnstile stream. The universe
 $U$ is the set of movies in our database, and each stream item is a pair
 $(j,r) \in U\times \left(\left[1,10\right]\cap \mathbb{N}\right)$.
-With our definition of movie ranks the turnstile stream is strict, and furthermore
-the rank $r$ for every element is positive. This is not a necessary restriction
-however.
+With our definition of movie ranks we get a strict turnstile stream --- 
+in fact the delta $r$ for every stream element is positive.
 
 The simplest algorithm to solve our problem is then simply calculating the
 frequency vector for the stream, and sort it when our algorithm is queried.
@@ -35,12 +34,31 @@ in the stream, or the universe size $|U|$. A query would then require
 $O(n \log(m))$ time, which is unacceptable.
 
 \begin{enumerate}
-	\item{Maintaining ordering with each item (probably based on b-tree or
-		binary-heap or similar idea)}
-	\item{Approximation based on sampling (at least two approaches: sample
-		movies (dangerous) or sample ratings (less dangerous, but
-	provides no adv. wrt working memory))}
-	\item{Maybe sketching/hashing approach to approximation?}
+	\item{Maintaining ordering with each item}
+	\item{Approximation based on sampling}
+	\item{sketching approach to approximation}
 \end{enumerate}
 
-For 1 --- maintaining ordering --- 
+For 1 --- maintaining ordering --- we diverge from the classical definition of
+streaming algorithms. Both by using linear memory, and by using non-constant
+time for each stream item. Although the latter is common, it is unusual to use
+time non-constant in the stream size. We note that this solution will be
+equivalent to maintaining an ordered set of running averages, and is thus the
+same as the online-sorting approach. Knowing that for most stream items $(j,r)$,
+the movie represented by $j$ will already be in the ordered set, it might be
+possible to achieve insertion time linear in the number of inversions needed to
+reorder the set, though it is not clear that this improves on the
+$log(n)$ insertion time in binary search trees..
+
+For 2 --- sampling the stream --- there seem to be two obvious approaches;
+Sampling as normal (reservoir sampling) over the stream, or sampling over the
+movies, deliberately making sure that all movies are represented in the sample,
+or that the number of samples...
+Neither seem to be much good
+
+Finally 3 --- sketching --- looks good. We can use \texttt{Count-Min sketch} to
+get approximate point-queries (although we would query all points, or at least
+max-k points). It may even be possible to combine this solution
+with 1, to avoid sorting the samples when queried, though this requires further
+analysis.
+
