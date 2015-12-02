@@ -10,7 +10,7 @@
 \renewcommand{\%}{\scalebox{.9}{\oldpct}}
 \begin{document}
 
-\title{Problem Description}
+\title{SAD2 exam report}
 \author{
 	Radoslaw Niemczyk
 	\\\texttt{radn@itu.dk}
@@ -22,6 +22,16 @@
 \maketitle
 
 %\tableofcontents
+
+\section*{Notes for the First Draft}
+\begin{quote}
+Having begun the project a little late, the current version is in no way
+in-depth. Having said that, we really appreciate any feedback you can give for
+it. As the we began analysing our two over-all approaches (sorting and streaming
+based approaches), it became apparent that they are more or less equivalent, at
+least insofar as we have analyzed them at this point. We are therefore unsure
+whether we have chosen a bad overall direction for the project.
+\end{quote}
 
 \section*{Ordering movie ratings in a dynamic setting}
 Ranking has become an increasingly important problem, with ever-growing datasets
@@ -50,8 +60,9 @@ memory bound lower than $m$ by sacrificing correctness, achieve both by
 sacrificing currency, i.e. allowing the output to become somewhat outdated as
 the underlying data set evolves.
 
-Following is a list of techniques that we deem promising, and would like to
-explore the effectiveness of:
+Following is a list of techniques that we deemed promising at the project
+outset, and hence wished explore the effectiveness of with respect to our
+problem:
 
 \begin{description}
 	\item[Parallelization] The use of parallelized sorting algorithms, such
