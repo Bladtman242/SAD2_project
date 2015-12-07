@@ -22,7 +22,23 @@
 \maketitle
 
 %\tableofcontents
-
+\section*{Introduction}
+Ranking has become an increasingly important problem, with ever-growing datasets
+both in the industry and in academia. In XXI century gathering the data is not
+considered beign something fancy. More and more people is getting access to the
+Internet and more content like films, music is created and evaluated by them.
+For answering some questions because of thin phenomen
+we might need specific approach. They are multiple factors
+like: time, space, data, completness of data which are creating completely different
+cases.
+Expectanions of the users are getting bigger and bigger also. They don't want to
+be dependend of one source of informations. If one ot the sources if compromised
+by some bad like lobbing or very radical user preferences it is profitiable to
+process multiple data sources like a rankings from multiple users from multiple
+websites.
+Ranking provides what might be the simplest type of recommendation system:
+recommend the items that score best on a global total ranking, independently of
+the recipient of the recommendation.
 \section*{Ordering movie ratings in a dynamic setting}
 Ranking has become an increasingly important problem, with ever-growing datasets
 both in the industry and in academia.
@@ -32,7 +48,7 @@ products, to make it easier to choose a product of interest.
 Ranking provides what might be the simplest type of recommendation system:
 recommend the items that score best on a global total ranking, independently of
 the recipient of the recommendation.
-For this it is be valuable to have the full set of items ordered by
+It is valuable then to have the full set of items ordered by
 rank.
 
 To motivate our approach, we present our project through the following concrete
@@ -77,8 +93,13 @@ problem:
 
 \begin{description}
 	\item[Parallelization] The use of parallelized sorting algorithms, such
-		as parallelized merge- or radix- sort.
-
+		as parallelized merge- or radix- sort. Parallization in algorithms is very
+		natural for sorting/selection. But it is still very overlooked. It might be
+		a challening to see the real impact of this - because we are affecting the
+		overall time consmuption by using it. Moreover usally we are adding more
+		complexity and overhead to our solution - by creating and mantaining parallel
+		task and jobs. This mean on of our point of emphasis will analysis of the
+		pros and cons carried by this approach.
 	\item[Approximation] We would like to explore the possibility of
 		performing an approximate sort. User--provided rankings are
 		often inconsistent. For instance, if a user ranks a move $m$
@@ -90,7 +111,6 @@ problem:
 		may be well worth it to perform a partial sorting of the
 		rankings --- such that a top--ten might really be a top--eight,
 		plus 12 and 14.
-
 	\item[Online sorting] Sorting is an inherently offline problem --- you
 		can not sort a set without having all the values. However, for
 		problems where the full data set is not immediately available,
@@ -107,7 +127,3 @@ problem:
 \input{./streamingsampling.tex}
 
 \end{document}
-
-
-
-
