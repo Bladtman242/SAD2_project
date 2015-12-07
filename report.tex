@@ -40,34 +40,58 @@ Ranking provides what might be the simplest type of recommendation system:
 recommend the items that score best on a global total ranking, independently of
 the recipient of the recommendation.
 \section*{Ordering movie ratings in a dynamic setting}
+<<<<<<< HEAD
 For this it might be valuable to have the entire set of products ordered by
 rank, but it can be sufficient to have a \textit{top-k} list, of the $k$ highest
 (and/or lowest) ranked items.
+=======
+Ranking has become an increasingly important problem, with ever-growing datasets
+both in the industry and in academia.
 
+Ranking is used commercially to provide customers with proposed subsets of
+products, to make it easier to choose a product of interest.
+Ranking provides what might be the simplest type of recommendation system:
+recommend the items that score best on a global total ranking, independently of
+the recipient of the recommendation.
+It is valuable then to have the full set of items ordered by
+rank.
+>>>>>>> af10732facb75bf94c4923e1c459252951010b56
+
+To motivate our approach, we present our project through the following concrete
+problem: An \texttt{IMDB} like service maintains a list of movies, and lets
+users rank movies on some scale (say $\left[1,10\right]\cap \mathbb{N}$). We
+want to provide the set of movies, sorted by user-supplied ratings. It is likely
+that  user-supplied ratings will span a large portion of the valid range, with
+many movies getting a few maximum ratings, but a low overall score. It is
+therefore necessary to use an aggregate for ranking, such as the average
+user-rating for each movie. For simplicity, we assume that ratings cannot be
+changed or deleted, only added. This makes it possible to maintain running
+averages, as
+opposed to the full set of ratings, without integrity loss
+
+If ratings are added frequently, we can consider the input --- the set of
+$(user, rating, movie)$ triplets --- to be \textit{dynamic}. The input is dynamic
+in the sense that the \textit{true} global ranking may change over time, with
+every added user-supplied rating. 
 In a static setting, where the global rank does not evolve over time, there are
-several simple algorithms: sorting the full data set, or probing for the $k$
-largest elements. In a dynamic setting however, were the data evolves over time,
+simple algorithms that solve our problem. E.g. sorting the full data set would
+do.
+In a dynamic setting, were the data evolves over time,
 those algorithms would need to be re-run to maintain current solutions (as the
 underlying input changes, so does the global ranking, and hence the correct
 solution). Hence, there may be better algorithms that maintain and evolve the
 solution according to the input.
 
-To motivate our approach, we present it through the following concrete problem:
-A service maintains a list of movies, and lets users rank movies on some scale
-(say $\left[1,10\right]\cap \mathbb{N}$). Since ratings for individual movies
-will likely be spread out in the valid range, rather than clustered on a single
-agreed-upon value, we will consider the average rating of each movie. We want to
-provide an ordered set of the best $m\leq n$ movies (In particular, $m$ might be
-equal to $n$).
-The data is dynamic in the sense that the \textit{true} global ranking may
-change with every new user-supplied rating. We assume new ratings will be
-frequent enough that re-sorting the average ranks is infeasible.
-
-In this scenario, we want to explore trade-offs between memory
-consumption, correctness, and  currency. In particular it should be possible to
-achieve a memory bound lower than $m$ by sacrificing correctness, achieve both
-by sacrificing currency, i.e. allowing the output to become somewhat outdated as
-the underlying data set evolves.
+We will start by analyzing the most direct approach of maintaining a binary
+tree of the movies, updating it with each rating in the input.
+We will then explore different algorithms in light of the trade-offs between
+memory consumption, correctness, and currency. In particular it should be
+possible to achieve a memory bound lower than $m$ by sacrificing correctness,
+achieve both by sacrificing currency, i.e. allowing the output to become
+somewhat outdated as the underlying data set evolves. We note that in our
+\texttt{IMDB} like scenario, the running time of getting a total ordering is
+irrelevant. The running time per rating is all that matters, though they will
+often be closely related.
 
 Following is a list of techniques that we deemed promising at the project
 outset, and hence wished explore the effectiveness of with respect to our
