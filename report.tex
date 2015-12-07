@@ -56,8 +56,13 @@ problem:
 
 \begin{description}
 	\item[Parallelization] The use of parallelized sorting algorithms, such
-		as parallelized merge- or radix- sort.
-
+		as parallelized merge- or radix- sort. Parallization in algorithms is very
+		natural for sorting/selection. But it is still very overlooked. It might be
+		a challening to see the real impact of this - because we are affecting the
+		overall time consmuption by using it. Moreover usally we are adding more
+		complexity and overhead to our solution - by creating and mantaining parallel
+		task and jobs. This mean on of our point of emphasis will analysis of the
+		pros and cons carried by this approach.
 	\item[Approximation] We would like to explore the possibility of
 		performing an approximate sort. User--provided rankings are
 		often inconsistent. For instance, if a user ranks a move $m$
@@ -86,7 +91,3 @@ problem:
 \input{./streamingsampling.tex}
 
 \end{document}
-
-
-
-
