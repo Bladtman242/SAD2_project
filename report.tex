@@ -45,9 +45,9 @@ To motivate our approach, we present our project through the following concrete
 problem: An \texttt{IMDB} like service maintains a list of movies, and lets
 users rank movies on some scale (say $\left[1,10\right]\cap \mathbb{N}$). We
 want to provide the set of movies, sorted by user-supplied ratings. It is likely
-that  user-supplied ratings will span a large portion of the valid range, with
-many movies getting a few maximum ratings, but a low overall score. It is
-therefore necessary to use an aggregate for ranking, such as the average
+that ratings of individual movies will span a large portion of the valid range, with
+some movies getting a few maximum ratings, but a low overall score. It is
+therefore necessary to use an aggregate for the ranking, such as the average
 user-rating for each movie. For simplicity, we assume that ratings cannot be
 changed or deleted, only added. This makes it possible to maintain running
 averages, as
