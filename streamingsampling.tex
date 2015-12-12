@@ -1,6 +1,6 @@
 \section*{A Stream Based Approach}
 Streaming algorithms provide excellent solutions to many problems where data
-sets are large enough that we wish (or need) to sacrifice correctness for low
+sets are large enough that we wish (or need) to sacrifice exactness for low
 memory usage and time consumption.
 From \texttt{Ikonomovska\--Zelke}:
 \begin{quote}
@@ -13,53 +13,128 @@ To be precise, they require that the size of the working memory is sublinear in 
 Due to this nature of streaming algorithms they are not commonly used for
 problems that require analysing parts of non-constant, non-parameterized size
 of the data set, for each given input. Hence an approach to
-solve our problem --- sorting -- based on streaming algorithms will provide some interesting
+solve our problem --- sorting --- based on streaming algorithms will provide some interesting
 trade-offs.
 
 We begin with a definition of our stream, and a simple algorithm for our
-problem. Our input is a turnstile stream. The universe
+problem. Our input is a turnstile stream $S = \alpha_1,
+\alpha_2,\ldots,\alpha_{|S|}$. The universe
 $U$ is the set of movies in our database, and each stream item is a pair
 $(j,r) \in U\times \left(\left[1,10\right]\cap \mathbb{N}\right)$.
-With our definition of movie ranks we get a strict turnstile stream --- 
-in fact the delta $r$ for every stream element is positive.
+With our definition of movie ranks we get a strict turnstile stream ---
+in fact the delta $r$ for \textit{every} stream element is positive.
+We let $|S|$ denote the cardinality of the stream.
 
 The simplest algorithm to solve our problem is then simply calculating the
-frequency vector for the stream, and sort it when our algorithm is queried.
-However, this algorithm is not very satisfactory. The working memory is
-sublinear in the cardinality of the stream, but not in the universe size. It
+normalized frequency vector for the stream, and sort it when queried.
+However, this is not very satisfactory. The working memory is
+sublinear in $|S|$, but linear in the universe size $|U|$. It
 does not provide a current solution either, as we have to sort the frequency
 vector when queried. On the positive side, the solution provided by the
-algorithm is correct. To be precise, this algorithm would require $O(m)$ working
-memory, and time for each stream item, $m$ being the number of distinct movies
-in the stream, or the universe size $|U|$. A query would then require
-$O(n \log(m))$ time, which is unacceptable.
+algorithm is exact. To be precise, this algorithm would require $O(m)$ working
+memory, and constant time for each stream item, $m$ being the number of distinct movies
+in the stream, which we assume to be $|U|$. A query would then
+require $O(m \log(m))$ time.
 
-\begin{enumerate}
-	\item{Maintaining ordering with each item}
-	\item{Approximation based on sampling}
-	\item{sketching approach to approximation}
-\end{enumerate}
+The rest of this section discusses techniques that alleviate these problems
+with different trade-offs.
 
-For 1 --- maintaining ordering --- we diverge from the classical definition of
-streaming algorithms. Both by using linear memory, and by using non-constant
-time for each stream item. Although the latter is common, it is unusual to use
-time non-constant in the stream size. We note that this solution will be
-equivalent to maintaining an ordered set of running averages, and is thus the
-same as the online-sorting approach. Knowing that for most stream items $(j,r)$,
-the movie represented by $j$ will already be in the ordered set, it might be
-possible to achieve insertion time linear in the number of inversions needed to
-reorder the set, though it is not clear that this improves on the
-$log(n)$ insertion time in binary search trees..
+\subsection*{Order Maintenance}
+In the simple algorithm, results were not \textit{current}, because every query
+required a sort of the frequency vector --- which is long. If we allow ourselves
+to use more than constant processing time per stream element, this problem can
+be solved by maintaining an \textit{always sorted} data structure with pointers
+into the frequency vector, such as a search tree.
+This algorithm is equivalent to maintaining an ordered set of running averages,
+and is thus the same as the online-sorting approach described previously.
 
-For 2 --- sampling the stream --- there seem to be two obvious approaches;
-Sampling as normal (reservoir sampling) over the stream, or sampling over the
-movies, deliberately making sure that all movies are represented in the sample,
-or that the number of samples...
-Neither seem to be much good
+Knowing that for most stream items $(j,r)$, the movie represented by
+$j$ will already be in the ordered set, it might be possible to achieve
+insertion time linear in the number of inversions needed to reorder the set,
+though it is not clear that this should improve the $log(n)$ insertion time in
+binary search trees.
 
-Finally 3 --- sketching --- looks good. We can use \texttt{Count-Min sketch} to
-get approximate point-queries (although we would query all points, or at least
-max-k points). It may even be possible to combine this solution
-with 1, to avoid sorting the samples when queried, though this requires further
-analysis.
+In summary, we get $O(log(n))$ processing time for each stream element, but
+queries can now be performed in $O(n)$. This a very natural change from the
+simple algorithm, that really only moves the required work from the time of
+querying, to the time of input.
+
+\subsection*{Approximation based on sampling}
+In addition to the lack of currency, the simple algorithm requires a lot of
+memory. Not surprisingly, streaming algorithms lets us buy a lower memory
+requirement, at the cost of exactness.
+
+There seem to be two obvious approaches;
+normal reservoir sampling over the stream, or sampling over the
+movies, deliberately making sure that all movies are represented in the sample.
+The later obviously fails to improve memory consumption, and is only suggested
+because taking a random sample over the stream seems dangerous, as it might well
+discard movies from the stream, by not picking any of their ratings for the
+sample. As it turns out, this is not a big problem.
+
+Although, a uniformly random sample of ratings is not an answer to our original
+problem, it does have some nice properties: As stated in
+\sloppy{\texttt{Ikonomovska\--Zelke}} (p. 243); all $|S| \choose k$ possible
+samples, where $k$ is the sample size, are equally likely to be our result. It
+follows directly from this that popular ratings for a movie are more likely to
+occur than unpopular ones. However, the likelihood of a movie occurring in the
+sample similarly correlates to how many ratings it has, not -- as we would want
+-- how high it's average rating is. In other words, reservoir sampling gives us
+a random set of ratings, with no guarantee that the sample contains good movies.
+
+The common reservoir sampling algorithm described in
+\texttt{Ikonomovska\--Zelke} remembers $k$ samples. After the first $k$, each
+stream element \raggedright{$\alpha_i, k < i \leq |S|$}, replaces one of the
+$k$ samples with probability $k/i$, choosing the sample to be replaced at
+random.
+
+The sampling approach solves our memory issues by parametrizing the memory
+consumption. The algorithm uses $O(k)$ memory, independent of both $|U|$ and
+$|S|$.
+
+We can modify the reservoir sampling algorithm to keep running averages instead
+of samples, modifying the sample when seeing a stream element that refers to the
+same movie, and only replacing a sample when seeing an element that is not
+already in the set of remembered movie samples. We then no longer get sampled
+ratings, but estimates of the movie averages --- which is what we wanted.
+Maintaining running averages can be thought of as keeping a frequency vector,
+and changing the stream so that each element $(j, r)$ becomes $(j, r')$, where
+$r'$ is the change $r$ imposes on the kept average for movie $j$. Despite
+the possibility of $r'$ being negative, we are still in the strict turnstile
+model, as the average will never be negative, regardless of what subset if $S$
+we look at.
+
+The problem of missing movies persists however. If wish achieve the $O(k)$
+memory bound, we can not hope to find the exact solution using sampling in this
+way. However, if we limit our problem to find the top-l movies, we can.
+
+%As described in \texttt{Ikonomovska\--Zelke}, we can adjust the quality of
+%the result by adjusting $k$ as following.
+%If 
+\begin{quote}
+	DRAFT NOTE: This would be a good place to analyze the quality of the
+	solution --- in terms of $k$
+	%In that case, it should be shown that it still holds (or not) after
+	%changing the sampling method in the following paragraph
+\end{quote}
+
+If we alter our running-average sampling to replace the \textit{smallest}
+sample, instead picking one at random, the probability of our $k$ samples
+containing the top $l<k$ movies increases. \texttt{Metwally et al} present an
+algorithm that does just that, albeit for frequencies rather than averages.
+
+\begin{quote}
+	DRAFT NOTE: Now actually go into \texttt{Metwally's solution, adapt it
+	to the running averages, and analyse it}.
+	Also mention it's relation to sketching.
+\end{quote}
+
+\subsection*{Approximation based on Sketching}
+
+\begin{quote}
+	DRAFT NOTE: Consider moving this to before the sampling section.
+	And maybe extract the general stuff to the (or a new) super section.
+\end{quote}
+Sketching lets us sacrifice exactness for lower memory consumption, without
+having to worry about loosing entire movies from the solution.
 
