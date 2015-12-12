@@ -74,25 +74,12 @@ somewhat outdated as the underlying data set evolves. We note that in our
 irrelevant. The running time per rating is all that matters, though they will
 often be closely related.
 
+\input{./general.tex}
+
+
 Following is a list of techniques that we deemed promising at the project
 outset, and hence wished explore the effectiveness of with respect to our
 problem:
-
-\section*{General approach}
-One of the basic and also efficient concepts is using a data structure which
-will provide mechanism for extracting interesting data efficiently. 
-Natural choice is a heap, more precisely Min-Max Heap. 
-It is provides properties of regular heap like a: 
-- O(n) built time,
-- O(log(n)) for insertion and deletion
-
-But even more important are properties carried by Min-Max variation. Which are 
-guaranteeing us a constant time for Min and Max operations.
-The Top/Low(k) finding operation can be performed in O(k*log(k)) time.
-
-Using this approach requires to store all input elements. It takes o(n) for 
-large sets. 
-Based on \texttt{Min-Max Heaps and Generalized Priority Queues}:
 
 \begin{description}
 	\item[Parallelization] The use of parallelized sorting algorithms, such
