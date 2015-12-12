@@ -1,10 +1,23 @@
 \section*{General approach}
 One of the basic and also efficient concepts is using a data structure which
 will provide mechanism for extracting interesting data efficiently. 
-Natural choice and one of the simplest is a heap. But our specific problem of 
-identifing Top/Low elements of a set requires a special capabilities.
 
-\noindent \textbf{Min-Max Heap}
+\noindent \textbf{Binary Search Tree}
+
+Creation of BST is an insertion of each element in $O(log{}n)$ time. As a result 
+we get sorted structure of our inputs - accessing all of them takes $O(n)$.
+Using this approach requires to store all input elements - $O(n)$. 
+And if we want to find Low k elements of set we still need to travers all set.
+
+\noindent \textbf{Heap and Min-Max Heap}
+
+Ordering items using Heap takes $O(n\log{}n)$. Where creation of a heap takes
+$O(n)$. Then we are traversing through heap n times using fuction which takes
+$O(log{}n)$. Which results in $O(n + n\log{}n)$, which leads to our prevoiusly
+stated complexity.
+
+In scenario when we are only interested in Top and Low k elements of a set we might takes
+different heap based approach called Min-Max Heap.
 
 Provides properties of regular heap like a: 
 \begin{itemize}
