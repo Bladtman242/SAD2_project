@@ -1,8 +1,26 @@
 \section*{General approach}
-One of the basic and also efficient concepts is using a data structure which
-will provide mechanism for extracting interesting data efficiently. 
+To tacle this problem we can utilize two kinds of approaches. 
+One is sorting entire set. Main adventage is the simplicity. 
+Sorting is one of the basic, fundamentals algorithmic problems.
+But also carries a drawbacks. Main one is requirement to sort 
+each time when data set in altered. 
+Also sorting algorithm effciency is often bounded to the current 
+state of input. 
 
+
+Second concept is using a data structure which are able to produce
+sorted input once they are built. The main part in a construction
+- every time structure is changed we need to execute this operation
+with maintaining or restoring it's properties.  
+ 
 \noindent \textbf{Binary Search Tree}
+
+From \texttt{Algortihms, 4 Edition}:
+\begin{quote}
+"A binary search tree (BST) is a binary tree where each node has a Comparable key 
+(and an associated value) and satisfies the restriction that the key in any node is larger than the keys 
+in all nodes in that node's left subtree and smaller than the keys in all nodes in that node's right subtree."
+\end{quote}
 
 Creation of BST is an insertion of each element in $O(\log{}n)$ time. As a result 
 we get sorted structure of our inputs - accessing all of them takes $O(n)$.
@@ -11,10 +29,20 @@ And if we want to find Low k elements of set we still need to travers all set.
 
 \noindent \textbf{Heap and Min-Max Heap}
 
+From \texttt{Heap, Wikipedia}:
+\begin{quote}Heap is a specialized tree-based data structure that satisfies the heap property: 
+If A is a parent node of B then the key of node A is ordered with respect to the key of node 
+B with the same ordering applying across the heap.
+\end{quote}
+
 Ordering items using Heap takes $O(n\log{}n)$. Where creation of a heap takes
 $O(n)$. Then we are traversing through heap n times using fuction which takes
 $O(\log{}n)$. Which results in $O(n + n\log{}n)$, which leads to our prevoiusly
 stated complexity.
+
+Also Binary Heap can offer better average insertion time than BST which may
+be important factor in some scenarions when the data are often updated but we 
+still need to able to acess the sorting results.
 
 In scenario when we are only interested in Top and Low k elements of a set we might takes
 different heap based approach called Min-Max Heap.
@@ -24,6 +52,12 @@ Provides properties of regular heap like a:
 \item $O(n)$ built time,
 \item $O(\log{}n)$ for insertion and deletion
 \end{itemize}
+
+From \texttt{Min-max heap, Wikipedia}:
+\begin{quote}Heap is a specialized tree-based data structure that satisfies the heap property: 
+If A is a parent node of B then the key of node A is ordered with respect to the key of node 
+B with the same ordering applying across the heap.
+\end{quote}
 
 But even more important are properties carried by Min-Max variation. Which are 
 guaranteeing us a constant time for Min and Max operations. The Top/Low(k) 
