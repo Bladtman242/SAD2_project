@@ -1,0 +1,20 @@
+\section*{General approach extension}
+\noindent \textbf{Parallelization}
+
+Utilizing power of multicore architecture in this scope is very tempting.
+But our current approach is not supportive. By using data structure like Binary Tree
+or Heap in a single thread scenario we are receiving multiple benefits like logarithmic time 
+for insertion for each element or limited space usage. For each new element we have to only perform
+insertion with logarithmic cost. For scenario when we are interested in intermidiate results it is 
+a very big adventage against sorting algorithms like QuickSort or MergeSort.
+
+But these algorithms have adventage over data structure based sorting - they are much
+more prone to Parallelization. Depending on the architecture or use case even in light 
+of need processing partial input it might be profitiable to resort our data multiple
+time using benefits of multicore, multithreaded computing if time is our main constraint.
+
+Creation of BST is an insertion of each element in $O(log{}n)$ time. As a result 
+we get sorted structure of our inputs - accessing all of them takes $O(n)$.
+Using this approach requires to store all input elements - which consumes $O(n)$ space. 
+And if we want to find Low k elements of set we still need to travers all set.
+
