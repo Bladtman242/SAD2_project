@@ -35,7 +35,7 @@ vector when queried. On the positive side, the solution provided by the
 algorithm is exact. To be precise, this algorithm would require $O(m)$ working
 memory, and constant time for each stream item, $m$ being the number of distinct movies
 in the stream, which we assume to be $|U|$. A query would then
-require $O(m \log(m))$ time.
+require $O(m \log m)$ time.
 
 The rest of this section discusses techniques that alleviate these problems
 with different trade-offs.
@@ -52,10 +52,10 @@ and is thus the same as the online-sorting approach described previously.
 Knowing that for most stream items $(j,r)$, the movie represented by
 $j$ will already be in the ordered set, it might be possible to achieve
 insertion time linear in the number of inversions needed to reorder the set,
-though it is not clear that this should improve the $\log(n)$ insertion time in
+though it is not clear that this should improve the $\log n$ insertion time in
 binary search trees.
 
-In summary, we get $O(\log(n))$ processing time for each stream element, but
+In summary, we get $O(\log n)$ processing time for each stream element, but
 queries can now be performed in $O(n)$. This a very natural change from the
 simple algorithm, that really only moves the required work from the time of
 querying, to the time of input.
@@ -185,13 +185,14 @@ register and turnstile model respectively). This clearly does not work, as the
 set of most frequently rated movies is not necessarily similar to the set of
 movies with a high sum of ratings. Instead, we can adapt the algorithm to
 maintain running averages instead of frequencies. This presents a problem
-however. The lemmas and theorems presented depend on the fact fact that each
-replacement in the sample-set increments the counter by $1$. But incrementing by
-$1$ will not provide us with running averages.
+however. The proofs for the presented lemmas and theorems depend on the fact
+fact that each replacement in the sample-set increments the counter by $1$. But
+incrementing by $1$ will not provide us with running averages. Hence, keeping
+running averages will break the proofs. 
 
 \begin{quote}
-	DRAFT NOTE: Now actually go into \texttt{Metwally's solution, adapt it
-	to the running averages, and analyse it}.
+	DRAFT NOTE: Now actually adapt it
+	to the running averages, and analyse it.
 	Also mention it's relation to sketching.
 \end{quote}
 
@@ -206,7 +207,7 @@ having to worry about loosing entire movies from the solution. We pay for this
 with an error bound that depends on $|S|$.
 The count-min sketch algorithm as described in \texttt{Ikonomovska\--Zelke}
 estimates the frequency vector of the stream, using
-$O(log(1/\delta)/\varepsilon + \log(n) \cdot \log(1/\delta))$ working memory.
+$O(\log(1/\delta)/\varepsilon + \log n \cdot \log(1/\delta))$ working memory.
 Where $\varepsilon$ determines the expected error $\varepsilon \cdot |S| /2$, of
 each frequency and $\delta$ is the probability of the actual error exceeding
 that bound. A simple adaption of their algorithm to our problem (estimating
@@ -214,7 +215,6 @@ averages, not frequencies) is to run two instances of the algorithm in parallel,
 estimating respectively the sum of ratings for each movie $R_j$ and the count of ratings for
 each movie $C_j$. We can then get an estimate of the average rating for a movie
 $j$ by $R_j/C_j$.
-
 
 \begin{quote}
 	DRAFT NOTE: this is a very simplified analysis.
