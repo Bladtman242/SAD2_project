@@ -1,4 +1,4 @@
-\section*{A Stream Based Approach}
+\section{A Stream Based Approach}
 Streaming algorithms provide excellent solutions to many problems where data
 sets are large enough that we wish (or need) to sacrifice exactness for low
 memory usage and time consumption.
@@ -16,15 +16,10 @@ of the data set, for each given input. Hence an approach to
 solve our problem --- sorting --- based on streaming algorithms will provide some interesting
 trade-offs.
 
-We begin with a definition of our stream, and a simple algorithm for our
-problem. Our input is a turnstile stream $S = \alpha_1,
-\alpha_2,\ldots,\alpha_{|S|}$. The universe
-$U$ is the set of movies in our database, and $R$ is the set of valid ratings 
-$R = \left(\left[1,10\right]\cap \mathbb{N}\right)$. The stream is then a
-multiset of $(j,r) \in U \times R$ pairs.
-With our definition of movie ranks we get a strict turnstile stream ---
-in fact the delta $r$ for \textit{every} stream element is positive.
-We let $|S|$ denote the cardinality of the stream.
+The definition of our stream, $S \in (U\times R)^{|S|}$ is the same as the
+sequence described in the introduction. With this definition we get a strict
+turnstile stream --- in fact the delta $r$ for \textit{every} stream element is
+positive.
 
 The simplest algorithm to solve our problem is then simply calculating the
 normalized frequency vector for the stream, and sort it when queried.
@@ -40,7 +35,7 @@ require $O(m \log m)$ time.
 The rest of this section discusses techniques that alleviate these problems
 with different trade-offs.
 
-\subsection*{Order Maintenance}
+\subsection{Order Maintenance}
 In the simple algorithm, results were not \textit{current}, because every query
 required a sort of the frequency vector --- which is long. If we allow ourselves
 to use more than constant processing time per stream element, this problem can
@@ -60,7 +55,7 @@ queries can now be performed in $O(n)$. This a very natural change from the
 simple algorithm, that really only moves the required work from the time of
 querying, to the time of input.
 
-\subsection*{Approximation based on sampling}
+\subsection{Approximation based on sampling}
 In addition to the lack of currency, the simple algorithm requires a lot of
 memory. Not surprisingly, streaming algorithms lets us buy a lower memory
 requirement, at the cost of exactness.
@@ -196,7 +191,7 @@ running averages will break the proofs.
 	Also mention it's relation to sketching.
 \end{quote}
 
-\subsection*{Approximation based on Sketching}
+\subsection{Approximation based on Sketching}
 
 \begin{quote}
 	DRAFT NOTE: Consider moving this to before the sampling section.

@@ -1,5 +1,4 @@
-\documentclass[a4paper, titlepage]{report}
-
+\documentclass[a4paper, titlepage]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{courier} % Required for the courier font
 \usepackage[bookmarks]{hyperref}
@@ -22,7 +21,7 @@
 \maketitle
 
 %\tableofcontents
-\section*{Introduction}
+\section{Introduction}
 Ranking has become an increasingly important problem, with ever-growing datasets
 both in the industry and in academia. In the 21. century gathering large data
 sets is no longer considered novel. More and more people are getting access to
@@ -37,24 +36,25 @@ while receiving live updates to the data. We choose algorithms to analyze based
 on factors like: time and space requirements, and the quality of the solutions
 in case of approximation algorithms.
 
-\section*{Ordering movie ratings in a dynamic setting}
+\section{Ordering movie ratings in a dynamic setting}
+\label{sec:intro_real}
 To motivate our approach, we present our project through the following concrete
-problem: An \texttt{IMDB} like service maintains a list of movies, and lets
-users rank movies on some scale (say $\left[1,10\right]\cap \mathbb{N}$). We
-want to provide the set of movies, sorted by user-supplied ratings. It is likely
-that ratings of individual movies will span a large portion of the valid range, with
-some movies getting a few maximum ratings, but a low overall score. It is
-therefore necessary to use an aggregate for the ranking, such as the average
-user-rating for each movie. For simplicity, we assume that ratings cannot be
-changed or deleted, only added. This makes it possible to maintain running
-averages, as
-opposed to the full set of ratings, without integrity loss
+problem: An \texttt{IMDB} like recommendation service maintains a list of
+movies, and lets users rank movies on some scale (say $\left[1,10\right]\cap
+\mathbb{N}$). We want to provide the set of movies, sorted by user-supplied
+ratings. It is likely that ratings of individual movies will span a large
+portion of the valid range. I.e. movies might have a few maximum ratings, but
+a low overall score, or vice versa. It is therefore necessary to use an
+aggregate for the ranking, such as the average user-rating for each movie. For
+simplicity, we assume that ratings cannot be changed or deleted, only added.
+This makes it possible to maintain running averages, as opposed to the full set
+of ratings, without integrity loss.
 
-If ratings are added frequently, we can consider the input --- the set of
-$(user, rating, movie)$ triplets --- to be \textit{dynamic}. The input is dynamic
-in the sense that the \textit{true} global ranking may change over time, with
-every added user-supplied rating.
-In a static setting, where the global rank does not evolve over time, there are
+We assume that ratings are added frequently, and that queries are frequent. We
+therefore consider the input --- the set of $(user, rating, movie)$ triplets ---
+to be \textit{dynamic}. The input is dynamic in the sense that the \textit{true}
+global ranking may change over time, with every added user-supplied rating. In a
+static setting, where the global rank does not evolve over time, there are
 simple algorithms that solve our problem. E.g. sorting the full data set would
 do.
 In a dynamic setting, where the data evolves over time,
@@ -63,16 +63,22 @@ underlying input changes, so does the global ranking, and hence the correct
 solution). Hence, there may be better algorithms that maintain and evolve the
 solution according to the input.
 
-We will start by analyzing the most direct approach of maintaining a binary
-tree of the movies, updating it with each rating in the input.
-We will then explore different algorithms in light of the trade-offs between
-memory consumption, correctness, and currency. In particular it should be
-possible to achieve a memory bound lower than $m$ by sacrificing correctness,
-achieve both by sacrificing currency, i.e. allowing the output to become
-somewhat outdated as the underlying data set evolves. We note that in our
-\texttt{IMDB} like scenario, the running time of getting a total ordering is
-irrelevant. The running time per rating is all that matters, though they will
-often be closely related.
+In our dynamic setting, the input is defined as a sequence (or multiset) $S =
+\alpha_1, \alpha_2,\ldots,\alpha_{|S|+1}$. The universe $U$ is the set of movies
+in our database, and $R$ is the set of valid ratings $R =
+\left(\left[1,10\right]\cap \mathbb{N}\right)$. That is, $S$ consists of $|S|$
+pairs $(j,r)\in U \times R$.
+
+We will start by analyzing the most direct approach; ordering the full movie set
+on each query, or maintaining an always-ordered data structure with the movies,
+updating it with each rating in the input. We will then explore different
+algorithms in light of the trade-offs between memory consumption, correctness,
+and currency. In particular it should be possible to achieve a memory bound
+lower than $m$ by sacrificing correctness, achieve both by sacrificing currency,
+i.e. allowing the output to become somewhat outdated as the underlying data set
+evolves. We note that in our \texttt{IMDB} like scenario, the running time of
+getting a total ordering is irrelevant. The running time per rating and per
+query is all that matters, though they will often be closely related.
 
 \input{./general.tex}
 
