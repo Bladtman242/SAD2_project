@@ -52,10 +52,10 @@ and is thus the same as the online-sorting approach described previously.
 Knowing that for most stream items $(j,r)$, the movie represented by
 $j$ will already be in the ordered set, it might be possible to achieve
 insertion time linear in the number of inversions needed to reorder the set,
-though it is not clear that this should improve the $log(n)$ insertion time in
+though it is not clear that this should improve the $\log(n)$ insertion time in
 binary search trees.
 
-In summary, we get $O(log(n))$ processing time for each stream element, but
+In summary, we get $O(\log(n))$ processing time for each stream element, but
 queries can now be performed in $O(n)$. This a very natural change from the
 simple algorithm, that really only moves the required work from the time of
 querying, to the time of input.
@@ -134,7 +134,7 @@ as follows:
 To support the eviction of the smallest sample, as well as the queries on the
 algorithm, the \textit{space-saving} algorithm keeps the samples $(U\times
 \mathbb{N})^k$ in non-increasing order of frequency. We let $K_i$ denote the
-frequency of the $i^{th}$ sample in this order, hence $K_k = min_j\pi_2(K_j)$.
+frequency of the $i^{th}$ sample in this order, hence $K_k = \min_j\pi_2(K_j)$.
 When a monitored movie is observed, it's counter is incremented. When a
 non-monitored movie $j'$ is observed, the movie replaces the $k^{th}$ sample
 $(j,K_k))$. Since $j'$ may at at this time have
@@ -206,7 +206,7 @@ having to worry about loosing entire movies from the solution. We pay for this
 with an error bound that depends on $|S|$.
 The count-min sketch algorithm as described in \texttt{Ikonomovska\--Zelke}
 estimates the frequency vector of the stream, using
-$O(log(1/\delta)/\varepsilon + log(n) \cdot log(1/\delta))$ working memory.
+$O(log(1/\delta)/\varepsilon + \log(n) \cdot \log(1/\delta))$ working memory.
 Where $\varepsilon$ determines the expected error $\varepsilon \cdot |S| /2$, of
 each frequency and $\delta$ is the probability of the actual error exceeding
 that bound. A simple adaption of their algorithm to our problem (estimating

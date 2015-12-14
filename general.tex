@@ -4,7 +4,7 @@ will provide mechanism for extracting interesting data efficiently.
 
 \noindent \textbf{Binary Search Tree}
 
-Creation of BST is an insertion of each element in $O(log{}n)$ time. As a result 
+Creation of BST is an insertion of each element in $O(\log{}n)$ time. As a result 
 we get sorted structure of our inputs - accessing all of them takes $O(n)$.
 Using this approach requires to store all input elements - which consumes $O(n)$ space. 
 And if we want to find Low k elements of set we still need to travers all set.
@@ -13,7 +13,7 @@ And if we want to find Low k elements of set we still need to travers all set.
 
 Ordering items using Heap takes $O(n\log{}n)$. Where creation of a heap takes
 $O(n)$. Then we are traversing through heap n times using fuction which takes
-$O(log{}n)$. Which results in $O(n + n\log{}n)$, which leads to our prevoiusly
+$O(\log{}n)$. Which results in $O(n + n\log{}n)$, which leads to our prevoiusly
 stated complexity.
 
 In scenario when we are only interested in Top and Low k elements of a set we might takes
@@ -22,7 +22,7 @@ different heap based approach called Min-Max Heap.
 Provides properties of regular heap like a: 
 \begin{itemize}
 \item $O(n)$ built time,
-\item $O(log{}n)$ for insertion and deletion
+\item $O(\log{}n)$ for insertion and deletion
 \end{itemize}
 
 But even more important are properties carried by Min-Max variation. Which are 
