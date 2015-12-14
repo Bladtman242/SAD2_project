@@ -19,8 +19,9 @@ trade-offs.
 We begin with a definition of our stream, and a simple algorithm for our
 problem. Our input is a turnstile stream $S = \alpha_1,
 \alpha_2,\ldots,\alpha_{|S|}$. The universe
-$U$ is the set of movies in our database, and each stream item is a pair
-$(j,r) \in U\times \left(\left[1,10\right]\cap \mathbb{N}\right)$.
+$U$ is the set of movies in our database, and $R$ is the set of valid ratings 
+$R = \left(\left[1,10\right]\cap \mathbb{N}\right)$. The stream is then a
+multiset of $(j,r) \in U \times R$ pairs.
 With our definition of movie ranks we get a strict turnstile stream ---
 in fact the delta $r$ for \textit{every} stream element is positive.
 We let $|S|$ denote the cardinality of the stream.
@@ -72,7 +73,7 @@ because taking a random sample over the stream seems dangerous, as it might well
 discard movies from the stream, by not picking any of their ratings for the
 sample. As it turns out, this is not a big problem.
 
-Although, a uniformly random sample of ratings is not an answer to our original
+Although a uniformly random sample of ratings is not an answer to our original
 problem, it does have some nice properties: As stated in
 \sloppy{\texttt{Ikonomovska\--Zelke}} (p. 243); all $|S| \choose k$ possible
 samples, where $k$ is the sample size, are equally likely to be our result. It
@@ -83,7 +84,7 @@ sample similarly correlates to how many ratings it has, not -- as we would want
 a random set of ratings, with no guarantee that the sample contains good movies.
 
 The common reservoir sampling algorithm described in
-\texttt{Ikonomovska\--Zelke} remembers $k$ samples. After the first $k$, each
+\texttt{Ikonomovska\--Zelke} remembers $k$ samples $K_0..K_{k}$. After the first $k$, each
 stream element \raggedright{$\alpha_i, k < i \leq |S|$}, replaces one of the
 $k$ samples with probability $k/i$, choosing the sample to be replaced at
 random.
@@ -93,16 +94,19 @@ consumption. The algorithm uses $O(k)$ memory, independent of both $|U|$ and
 $|S|$.
 
 We can modify the reservoir sampling algorithm to keep running averages instead
-of samples, modifying the sample when seeing a stream element that refers to the
-same movie, and only replacing a sample when seeing an element that is not
-already in the set of remembered movie samples. We then no longer get sampled
-ratings, but estimates of the movie averages --- which is what we wanted.
-Maintaining running averages can be thought of as keeping a frequency vector,
-and changing the stream so that each element $(j, r)$ becomes $(j, r')$, where
-$r'$ is the change $r$ imposes on the kept average for movie $j$. Despite
-the possibility of $r'$ being negative, we are still in the strict turnstile
-model, as the average will never be negative, regardless of what subset if $S$
-we look at.
+of samples, modifying samples when observing a stream element that refers to a
+movie already being monitored, and only replacing a sample when observing an
+element that is not already being monitored (i.e. not currently in the set of
+remembered movie samples). We then no longer get sampled ratings, but estimates
+of the movie averages --- which is what we wanted. Maintaining running averages
+can be thought of as keeping a frequency vector, and changing the stream so that
+each element $(j, r)$ becomes $(j, r')$, where $r'$ is the change $r$ imposes on
+the kept average for movie $j$. Despite the possibility of $r'$ being negative,
+we are still in the strict turnstile model, as the average will never be
+negative, regardless of what subset if $S$ we look at. Direct application of
+this analogue is infeasible, as it would require $O(|U|)$ memory to keep
+track off the counters necessary to calculate $r'$ from $r$. However, it would
+be interesting to apply it with estimations of those counters.
 
 The problem of missing movies persists however. If wish achieve the $O(k)$
 memory bound, we can not hope to find the exact solution using sampling in this
@@ -121,7 +125,69 @@ way. However, if we limit our problem to find the top-l movies, we can.
 If we alter our running-average sampling to replace the \textit{smallest}
 sample, instead picking one at random, the probability of our $k$ samples
 containing the top $l<k$ movies increases. \texttt{Metwally et al} present an
-algorithm that does just that, albeit for frequencies rather than averages.
+algorithm based on that idea. The algorithm mixes techniques from sampling and
+estimation, to provide both top-k \textit{and} frequent-elements queries, albeit
+for frequencies rather than averages.
+
+The \textit{space-saving} algorithm presented in \texttt{Metwally et al} works
+as follows:
+To support the eviction of the smallest sample, as well as the queries on the
+algorithm, the \textit{space-saving} algorithm keeps the samples $(U\times
+\mathbb{N})^k$ in non-increasing order of frequency. We let $K_i$ denote the
+frequency of the $i^{th}$ sample in this order, hence $K_k = min_j\pi_2(K_j)$.
+When a monitored movie is observed, it's counter is incremented. When a
+non-monitored movie $j'$ is observed, the movie replaces the $k^{th}$ sample
+$(j,K_k))$. Since $j'$ may at at this time have
+been observed at most $K_k+1$ times, the new sample is added as $(j',K_k+1)$. This
+introduces an element of estimation, trying to make up for increments lost by
+previous evictions from the sample-set. For each sample, the maximum
+overestimation $\varepsilon_i$ is tracked. $\varepsilon_i = K_k-1$ after the
+sample is replaced (equal to $K_k$ before the sample is replaced). The algorithm
+cleverly introduces error when the replacement occurs, and is hence more likely
+to err on infrequent elements than on frequent ones. I.e. the ones we are least
+interested in.
+
+\texttt{Metwally et al} Proves several theorems that are important for our use
+case: \textit{(Adapted to our problem definition. Numbering corresponds to that
+of the paper)}
+\begin{description}
+\item[Metwally Lemma 1] \hfill \\
+	The length $|S|$ of the stream is equal to the sum of the sample
+	frequencies.
+	$|S| = \sum_{i\leq k}K_i$
+
+\item[Metwally Lemma 2] \hfill \\
+	$K_k \leq \lfloor \frac{|S|}{k} \rfloor$ 
+
+\item[Metwally Lemma 3] \hfill \\
+	For any sample: $0 \leq \varepsilon_i \leq K_k$ i.e $f_i \leq f_i
+	+ \varepsilon_i = K_i \leq f_i+K_k$ where $f_i$ is the actual frequency
+	of the movie we estimate to have rank $i$.
+
+\item[Metwally Theorem 1] \hfill \\
+	Let $F_i$ denote the actual frequency of the movie with actual rank $i$.
+
+	Any movie with $F_i > K_k$ must exist in the sample-set. I.e any movie
+	with an actual frequency higher than the lowest estimated frequency in
+	the sample, must be in the sample.
+
+\item[Metwally Theorem 2] \hfill \\
+	Whether or not the movie with actual rank $i$ occupies the $i^{th}$
+	position in $K$, $K_i \geq F_i$
+
+\end{description}
+
+As mentioned, the \textit{space-saving} algorithm is intended for
+estimating frequencies, and needs modification to work with averages. A first
+thought might be to run two instances in parallel, estimating the count of
+ratings and sum of ratings respectively (equivalent to frequencies in the cash
+register and turnstile model respectively). This clearly does not work, as the
+set of most frequently rated movies is not necessarily similar to the set of
+movies with a high sum of ratings. Instead, we can adapt the algorithm to
+maintain running averages instead of frequencies. This presents a problem
+however. The lemmas and theorems presented depend on the fact fact that each
+replacement in the sample-set increments the counter by $1$. But incrementing by
+$1$ will not provide us with running averages.
 
 \begin{quote}
 	DRAFT NOTE: Now actually go into \texttt{Metwally's solution, adapt it
@@ -136,5 +202,22 @@ algorithm that does just that, albeit for frequencies rather than averages.
 	And maybe extract the general stuff to the (or a new) super section.
 \end{quote}
 Sketching lets us sacrifice exactness for lower memory consumption, without
-having to worry about loosing entire movies from the solution.
+having to worry about loosing entire movies from the solution. We pay for this
+with an error bound that depends on $|S|$.
+The count-min sketch algorithm as described in \texttt{Ikonomovska\--Zelke}
+estimates the frequency vector of the stream, using
+$O(log(1/\delta)/\varepsilon + log(n) \cdot log(1/\delta))$ working memory.
+Where $\varepsilon$ determines the expected error $\varepsilon \cdot |S| /2$, of
+each frequency and $\delta$ is the probability of the actual error exceeding
+that bound. A simple adaption of their algorithm to our problem (estimating
+averages, not frequencies) is to run two instances of the algorithm in parallel,
+estimating respectively the sum of ratings for each movie $R_j$ and the count of ratings for
+each movie $C_j$. We can then get an estimate of the average rating for a movie
+$j$ by $R_j/C_j$.
 
+
+\begin{quote}
+	DRAFT NOTE: this is a very simplified analysis.
+	It would be good to find the actual expectancy of this. Seems like it
+	should be easy, but apparently I'm retarded.
+\end{quote}
