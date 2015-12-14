@@ -80,46 +80,48 @@ evolves. We note that in our \texttt{IMDB} like scenario, the running time of
 getting a total ordering is irrelevant. The running time per rating and per
 query is all that matters, though they will often be closely related.
 
-\input{./general.tex}
-
-\input{./general-extended.tex}
-
 Following is a list of techniques that we deemed promising at the project
 outset, and hence wished explore the effectiveness of with respect to our
 problem:
 
-\begin{description}
-	\item[Parallelization] The use of parallelized sorting algorithms, such
-		as parallelized merge- or radix- sort. Parallization in algorithms is very
-		natural for sorting/selection. But it is still very overlooked. It might be
-		a challening to see the real impact of this - because we are affecting the
-		overall time consmuption by using it. Moreover usally we are adding more
-		complexity and overhead to our solution - by creating and mantaining parallel
-		task and jobs. This mean on of our point of emphasis will analysis of the
-		pros and cons carried by this approach.
-	\item[Approximation] We would like to explore the possibility of
-		performing an approximate sort. User--provided rankings are
-		often inconsistent. For instance, if a user ranks a move $m$
-		lower than a movie $m'$, does that mean he liked $m$ less, or
-		that he likes that genre less? It is unclear weather or not the
-		scale is linear, and the same user may have different
-		experiences on different days. This means that an \textit{exact}
-		ordering might not be necessary. If it provides a speedup, it
-		may be well worth it to perform a partial sorting of the
-		rankings --- such that a top--ten might really be a top--eight,
-		plus 12 and 14.
-	\item[Online sorting] Sorting is an inherently offline problem --- you
-		can not sort a set without having all the values. However, for
-		problems where the full data set is not immediately available,
-		onlineness can be achieved, or approximated, by sorting partial
-		data sets, and then in the end sorting the whole. Exploiting the
-		efficiency of certain sorting algorithms when dealing with
-		partially ordered data, to lessen the time spend waiting for the
-		data.
+\begin{quote}
+	DRAFT NOTE: make abstract-like "we explore...and find... finally we..."
+\end{quote}
 
-\end{description}
+%\begin{description}
+%	\item[Parallelization] The use of parallelized sorting algorithms, such
+%		as parallelized merge- or radix- sort. Parallization in algorithms is very
+%		natural for sorting/selection. But it is still very overlooked. It might be
+%		a challening to see the real impact of this - because we are affecting the
+%		overall time consmuption by using it. Moreover usally we are adding more
+%		complexity and overhead to our solution - by creating and mantaining parallel
+%		task and jobs. This mean on of our point of emphasis will analysis of the
+%		pros and cons carried by this approach.
+%	\item[Approximation] We would like to explore the possibility of
+%		performing an approximate sort. User--provided rankings are
+%		often inconsistent. For instance, if a user ranks a move $m$
+%		lower than a movie $m'$, does that mean he liked $m$ less, or
+%		that he likes that genre less? It is unclear weather or not the
+%		scale is linear, and the same user may have different
+%		experiences on different days. This means that an \textit{exact}
+%		ordering might not be necessary. If it provides a speedup, it
+%		may be well worth it to perform a partial sorting of the
+%		rankings --- such that a top--ten might really be a top--eight,
+%		plus 12 and 14.
+%	\item[Online sorting] Sorting is an inherently offline problem --- you
+%		can not sort a set without having all the values. However, for
+%		problems where the full data set is not immediately available,
+%		onlineness can be achieved, or approximated, by sorting partial
+%		data sets, and then in the end sorting the whole. Exploiting the
+%		efficiency of certain sorting algorithms when dealing with
+%		partially ordered data, to lessen the time spend waiting for the
+%		data.
+%
+%\end{description}
 
-\input{./onlinesort.tex}
+\input{./general.tex}
+
+\input{./general-extended.tex}
 
 \input{./streamingsampling.tex}
 
