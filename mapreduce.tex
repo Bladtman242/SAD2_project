@@ -6,30 +6,35 @@ Which allows processing in a parallel, distributed manner.
 
 \section{MapReduce}
 MapReduce takes advantage of locality of data - by processing it on 
-or near the storage assets in order to minimize network, space, IO,
-CPU cost on each machine.
-Execution in conducted in rounds. Each one of them three phases:
+or near the storage assets in order to minimize network, space, IO, CPU cost on each machine.
+Execution in conducted in rounds.  Each one of them three phases:
 
 \begin{itemize}
 \item Map: preprocess the data which will be delievered to each machine by applying 
 given function to each element. 
 \item Shuffle: it is responsible for actual data transfer. Data redistribiution is based on 
-keys generated in Map phase. Data belonging to one key are directed to same machine. 
+keys generated in Map phase. Data belonging to the one key are directed to same machine. 
 \item Reduce: each machine process given load. There is no network traffic or sharing between machines
 in Reduce phase.
 \end{itemize}
-
 
 \section{Two subproblems}
 Our problem of creating ranking of movies based on the user raiting 
 consist two subproblems. First one is creation of averages movie rate.
 Second is a putting them in order. 
 
-
 \subsection{Sorting average raitings}
 In 2008 Owen O'Malley won TeraByte sorting competition using Apache Hadoop
 - Java framework which process data using MapReduce. His solution - called TeraSort offers
 high scalability without adding overhead and overall complexity.
+
+First the algorithm starts with dividing load between each machine. Then takes sample 
+out of each one and sends to one given machine where they are sorted.
+Then utilize it in order to create "boundary objects" and redistribiutes them
+to all machines. Using the infromation contained in boundary objects 
+machine are exchaning data from local storages.
+One that is done each machine is sorting local data which completes process of sorting.
+
 In paper Minimal MapReduce Algorithms TeraSort was classified as
 minimal MapReduce algorithm. Which definition and properties are given
 here:
@@ -46,7 +51,7 @@ We say that the algorithm is minimal if it has all of the following
 properties.
 
 \begin{itemize}
-\item Minimum footprint: at all times, each machine uses only
+\item \emph{Minimum footprint}: at all times, each machine uses only
 O(m) space of storage.
 \item \emph{Bounded net-traffic}: in each round, every machine sends
 and receives at most $O(m)$ words of information over the
