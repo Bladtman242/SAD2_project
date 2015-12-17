@@ -18,10 +18,17 @@ only results with a lower distance can be considered useful.
 Our data is sampled from the \texttt{Netflix Prize} data set.
 The full data set contains more than 100 million user ratings, for more than 17
 thousand movies.
-We test the algorithm on two samples of the \texttt{Netflix} data, with 100
-million and 50 million ratings respectively. The ratings are chosen from the
-dataset as follows: Go through the set of movies in order of decreasing rating
-count. Pick each movie, until the desired number of ratings is encountered.
+We test the algorithm on three samples of the \texttt{Netflix} data:
+\begin{itemize}
+	\item \textit{100m ratings} contains all ratings for the $13726$ most
+		frequently rated movies. Roughly 100 million ratings total,
+	\item \textit{50m ratings} contains all ratings for the $611$ most
+		frequently rated movies. Roughly 50 million ratings total,
+	\item \textit{min10K ratings} contains all ratings for the $2042$ movies that have more
+		than $10.000$ ratings.
+
+
+\end{itemize}
 
 \pgfplotsset{scaled x ticks=false}
 \begin{center}
@@ -40,9 +47,11 @@ count. Pick each movie, until the desired number of ratings is encountered.
 	},
 ]
 \addplot table [y=100M,x=E]{allresults};
-\addlegendentry{100M ratings}
+\addlegendentry{\textit{100M ratings}}
 \addplot table [y=50M,x=E]{allresults};
-\addlegendentry{50M ratings}
+\addlegendentry{\textit{50M ratings}}
+\addplot table [y=min10K,x=E]{allresults};
+\addlegendentry{\textit{min10K ratings}}
 \end{axis}
 \end{tikzpicture}
 \end{center}
