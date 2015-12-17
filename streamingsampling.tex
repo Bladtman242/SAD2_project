@@ -30,7 +30,7 @@ does not provide a current solution either, as we have to sort the frequency
 vector when queried. On the positive side, the solution provided by the
 algorithm is exact. To be precise, this algorithm would require $O(m)$ working
 memory, and constant time for each stream item, $m$ being the number of distinct movies
-in the stream, which we assume to be $|U|$. A query would then
+in the stream, which we assume to be, or closely approach, $|U|$. A query would then
 require $O(m \log m)$ time.
 
 The rest of this section discusses techniques that alleviate these problems

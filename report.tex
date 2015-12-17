@@ -26,19 +26,13 @@
 
 %\tableofcontents
 \section{Introduction}
-Ranking has become an increasingly important problem, with ever-growing datasets
-both in the industry and in academia. In the 21. century gathering large data
-sets is no longer considered novel. More and more people are getting access to
-the internet and more content like films, music is created and evaluated by
-them.
-Ranking provides what might be the simplest type of recommendation system:
-recommend the items that score best on a global total ranking, independently of
-the recipient of the recommendation.
-
-In this project, we analyze different approaches to keeping a ranked data set,
-while receiving live updates to the data. We choose algorithms to analyze based
-on factors like: time and space requirements, and the quality of the solutions
-in case of approximation algorithms.
+With ever-growing datasets both in the industry and in academia, ranking becomes
+both more important and more interesting. In the 21th century gathering large
+data sets is no longer considered novel. Most of our entertainment media is
+online, and user ratings becomes the guiding star for quality. Ranking provides
+what might be the simplest type of recommendation system: recommend the items
+that score best on a global total ranking, independently of the recipient of the
+recommendation.
 
 \section{Ordering movie ratings in a dynamic setting}
 \label{sec:intro_real}
@@ -73,24 +67,28 @@ in our database, and $R$ is the set of valid ratings $R =
 \left(\left[1,10\right]\cap \mathbb{N}\right)$. That is, $S$ consists of $|S|$
 pairs $(j,r)\in U \times R$.
 
-We will start by analyzing the most direct approach; ordering the full movie set
-on each query, or maintaining an always-ordered data structure with the movies,
-updating it with each rating in the input. We will then explore different
-algorithms in light of the trade-offs between memory consumption, correctness,
-and currency. In particular it should be possible to achieve a memory bound
-lower than $m$ by sacrificing correctness, achieve both by sacrificing currency,
-i.e. allowing the output to become somewhat outdated as the underlying data set
-evolves. We note that in our \texttt{IMDB} like scenario, the running time of
-getting a total ordering is irrelevant. The running time per rating and per
-query is all that matters, though they will often be closely related.
+In this project, we explore different approaches to keeping a ranked data set
+while receiving live updates to the data. We will start by analyzing the most
+direct approach; ordering the full movie set on each query, or maintaining an
+always-ordered data structure with the movies, updating it with each rating in
+the input.
 
-Following is a list of techniques that we deemed promising at the project
-outset, and hence wished explore the effectiveness of with respect to our
-problem:
+We explore different streaming algorithms, in an attempt to achieve sublinear
+memory bounds.
 
-\begin{quote}
-	DRAFT NOTE: make abstract-like "we explore...and find... finally we..."
-\end{quote}
+We then present experimental results, measuring the error in the
+global rank resulting from estimating rating averages. Finally, we go out on a
+limb, describe a simple TerraSort-based \texttt{MapReduce} solution.
+
+We choose algorithms to analyze based on time- and space- complexity, currency,
+and the quality/correctness of the solutions in case of approximation
+algorithms.
+In particular it should be possible to achieve a memory bound lower than $|U|$ by
+sacrificing correctness, achieve both by sacrificing currency, i.e. allowing the
+output to become somewhat outdated as the underlying data set evolves. We note
+that in our \texttt{IMDB} like scenario, the running time of getting a total
+ordering is irrelevant. The running time per rating and per query is all that
+matters, though they will often be closely related. 
 
 %\begin{description}
 %	\item[Parallelization] The use of parallelized sorting algorithms, such
@@ -129,9 +127,9 @@ problem:
 
 \input{./streamingsampling.tex}
 
-\input{./mapreduce.tex}
-
 \input{./experiment.tex}
+
+\input{./mapreduce.tex}
 
 \input{./biblography.tex}
 
