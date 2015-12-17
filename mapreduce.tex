@@ -1,0 +1,81 @@
+\section{Map Reduce Approach}
+In light of constantly growing datasets solving even 
+most basic computational problems becomes more difficult and complex.
+One of the attempts to adress this need is a model called MapReduce.
+Which allows processing in a parallel, distributed manner.
+
+\section{Two subproblems}
+Our problem of creating ranking of movies based on the user raiting 
+consist two subproblems. First one is creation of averages movie rate.
+Second is a putting them in order. 
+
+
+\subsection{Sorting average raitings}
+In 2008 Owen O'Malley won TeraByte sorting competion using Apache Hadoop
+- Java framework which process data using MapReduce. TeraSort offers
+high scalability whitout adding overhead and overall complexity.
+
+In paper Minimal MapReduce Algorithms TeraSort was classified as 
+minimal MapReduce algorithm. Which definition and properties are given
+here:
+
+From \texttt{Minimal MapReduce Algorithms}:
+\begin{quote}
+Denote by $S$ the set of input objects 
+for the underlying problem. Let n, the problem cardinality,
+be the number of objects in $S$, and $t$ be the number of machines
+used in the system. Define $m = n/t$, namely, $m$ is the number
+of objects per machine when $S$ is evenly distributed across the
+machines. Consider an algorithm for solving a problem on $S$.
+We say that the algorithm is minimal if it has all of the following
+properties.
+
+\begin{itemize}
+\item Minimum footprint: at all times, each machine uses only
+O(m) space of storage.
+\item \emph{Bounded net-traffic}: in each round, every machine sends
+and receives at most $O(m)$ words of information over the
+network.
+\item  \emph{Constant round}: the algorithm must terminate after a
+constant number of rounds.
+\item \emph{optimal computation}: every machine performs only
+$O(T_seq /t)$ amount of computation in total (i.e., summing
+over all rounds), where $T_seq$ is the time needed to solve the
+same problem on a single sequential machine. Namely, the
+algorithm should achieve a speedup of t by using t machines
+in parallel. 
+\end{itemize}
+\end{quote}
+
+
+Which perfectly denotes main advantages of the TeraSort. The minimum footprint property guarantees
+that each of our machines will use the same amount of memory. Which makes profiling
+and planning infractures much easier. The same hold for network throughput - by knowing
+upper bound how much data will be transferred in the process we easily can track bottlenecks
+and scale our architecture.
+By having our load balanced it also benefits to performance. We can easily adopt amount of machines
+taking part in the computation which allows to easily maintain balance between speed and costs.
+Of course we could just use Quicksort instead of TeraSort - but the constant amount of rounds property
+is highly in favour of TeraSort. It guarantees better effiency and predictiable time of execution.
+
+
+\subsection{Calculating average ranking}
+To calculate Moving Average of each movie we again will used TeraSort. 
+But with modified Round 2. Where instead of sorting items in Reduce phase
+we will calculate average. Since TeraSort by design is prepared to execute 
+sorting procedure in this particiular phase transition is very simple.
+
+Thanks to fact that each machine contains part of data. And this particiular part contains movies from
+a given range it simplies process a lot. And makes it faster because we do not need to iterate over entire 
+input just in specific part.
+Our Moving Average calculation procedure is very simple. Similar to General Approach
+we are using HashMap. Where every new encountred movie is added to HashMap. If it is already 
+present we are adding next raiting to property which holds sum of it and also incrementing counter.
+Which are used to calculation average.
+
+
+
+
+
+
+
