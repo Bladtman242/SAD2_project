@@ -200,14 +200,11 @@ running averages will break the proofs.
 \end{quote}
 
 \subsection{Approximation based on Sketching}
+\label{sec:sketching}
 
-\begin{quote}
-	DRAFT NOTE: Consider moving this to before the sampling section.
-	And maybe extract the general stuff to the (or a new) super section.
-\end{quote}
 Sketching lets us sacrifice exactness for lower memory consumption, without
 having to worry about loosing entire movies from the solution. We pay for this
-with an error bound that depends on $|S|$.
+with an error bound that is linear in $|S|$.
 
 The count-min sketch algorithm as described in \texttt{Ikonomovska\--Zelke}
 estimates the frequency vector of the stream, using
