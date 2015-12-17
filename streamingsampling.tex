@@ -2,13 +2,14 @@
 Streaming algorithms provide excellent solutions to many problems where data
 sets are large enough that we wish (or need) to sacrifice exactness for low
 memory usage and time consumption.
-From \texttt{Ikonomovska\--Zelke}:
-\begin{quote}
+%From \texttt{Ikonomovska\--Zelke}:
+
+\citet{lamport94}
 "Streaming algorithms drop the demand of random access to the input. Rather, the input
 is assumed to arrive in arbitrary order as an input stream. Moreover, streaming algorithms
 are designed to settle for a working memory that is much smaller than the size
 of the input."
-\end{quote}
+
 To be precise, they require that the size of the working memory is sublinear in both the cardinality of the stream and the universe.
 Due to this nature of streaming algorithms they are not commonly used for
 problems that require analysing parts of non-constant, non-parameterized size
