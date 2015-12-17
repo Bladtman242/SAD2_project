@@ -2,9 +2,9 @@
 Streaming algorithms provide excellent solutions to many problems where data
 sets are large enough that we wish (or need) to sacrifice exactness for low
 memory usage and time consumption.
-%From \texttt{Ikonomovska\--Zelke}:
 
-\citet{lamport94}
+\texttt{Algorithmic Techniques for Processing Data Streams}\citep{ikonomovskazelke}:
+
 "Streaming algorithms drop the demand of random access to the input. Rather, the input
 is assumed to arrive in arbitrary order as an input stream. Moreover, streaming algorithms
 are designed to settle for a working memory that is much smaller than the size
@@ -70,8 +70,12 @@ discard movies from the stream, by not picking any of their ratings for the
 sample. As it turns out, this is not a big problem.
 
 Although a uniformly random sample of ratings is not an answer to our original
-problem, it does have some nice properties: As stated in
-\sloppy{\texttt{Ikonomovska\--Zelke}} (p. 243); all $|S| \choose k$ possible
+problem, it does have some nice properties.
+
+As stated in
+\sloppy{\texttt{Algorithmic Techniques for Processing Data Streams}\citep{ikonomovskazelke}: 
+
+all $|S| \choose k$ possible
 samples, where $k$ is the sample size, are equally likely to be our result. It
 follows directly from this that popular ratings for a movie are more likely to
 occur than unpopular ones. However, the likelihood of a movie occurring in the
@@ -80,7 +84,10 @@ sample similarly correlates to how many ratings it has, not -- as we would want
 a random set of ratings, with no guarantee that the sample contains good movies.
 
 The common reservoir sampling algorithm described in
-\texttt{Ikonomovska\--Zelke} remembers $k$ samples $K_0..K_{k}$. After the first $k$, each
+
+\texttt{Algorithmic Techniques for Processing Data Streams}\citep{ikonomovskazelke}:
+
+remembers $k$ samples $K_0..K_{k}$. After the first $k$, each
 stream element \raggedright{$\alpha_i, k < i \leq |S|$}, replaces one of the
 $k$ samples with probability $k/i$, choosing the sample to be replaced at
 random.
@@ -108,7 +115,7 @@ The problem of missing movies persists however. If wish achieve the $O(k)$
 memory bound, we can not hope to find the exact solution using sampling in this
 way. However, if we limit our problem to find the top-l movies, we can.
 
-%As described in \texttt{Ikonomovska\--Zelke}, we can adjust the quality of
+%As described in \texttt{Algorithmic Techniques for Processing Data Streams}\citep{ikonomovskazelke}: we can adjust the quality of
 %the result by adjusting $k$ as following.
 %If 
 \begin{quote}
@@ -120,12 +127,12 @@ way. However, if we limit our problem to find the top-l movies, we can.
 
 If we alter our running-average sampling to replace the \textit{smallest}
 sample, instead picking one at random, the probability of our $k$ samples
-containing the top $l<k$ movies increases. \texttt{Metwally et al} present an
+containing the top $l<k$ movies increases. \texttt{Efficient Computation of Frequent and Top-k Elements in Data Streams}\citep{efficientstreams}: present an
 algorithm based on that idea. The algorithm mixes techniques from sampling and
 estimation, to provide both top-k \textit{and} frequent-elements queries, albeit
 for frequencies rather than averages.
-
-The \textit{space-saving} algorithm presented in \texttt{Metwally et al} works
+Metwally et. al.
+The \textit{space-saving} algorithm presented in \texttt{Efficient Computation of Frequent and Top-k Elements in Data Streams}\citep{efficientstreams}: works
 as follows:
 To support the eviction of the smallest sample, as well as the queries on the
 algorithm, the \textit{space-saving} algorithm keeps the samples $(U\times
@@ -143,7 +150,7 @@ cleverly introduces error when the replacement occurs, and is hence more likely
 to err on infrequent elements than on frequent ones. I.e. the ones we are least
 interested in.
 
-\texttt{Metwally et al} Proves several theorems that are important for our use
+\texttt{Efficient Computation of Frequent and Top-k Elements in Data Streams}\citep{efficientstreams} Proves several theorems that are important for our use
 case: \textit{(Adapted to our problem definition. Numbering corresponds to that
 of the paper)}
 \begin{description}
