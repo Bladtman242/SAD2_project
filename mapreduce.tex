@@ -4,6 +4,22 @@ most basic computational problems becomes more difficult and complex.
 One of the attempts to adress this need is a model called MapReduce.
 Which allows processing in a parallel, distributed manner.
 
+\section{MapReduce}
+MapReduce takes advantage of locality of data - by processing it on 
+or near the storage assets in order to minimize network, space, IO,
+CPU cost on each machine.
+Execution in conducted in rounds. Each one of them three phases:
+
+\begin{itemize}
+\item Map: preprocess the data which will be delievered to each machine by applying 
+given function to each element. 
+\item Shuffle: it is responsible for actual data transfer. Data redistribiution is based on 
+keys generated in Map phase. Data belonging to one key are directed to same machine. 
+\item Reduce: each machine process given load. There is no network traffic or sharing between machines
+in Reduce phase.
+\end{itemize}
+
+
 \section{Two subproblems}
 Our problem of creating ranking of movies based on the user raiting 
 consist two subproblems. First one is creation of averages movie rate.
@@ -11,11 +27,10 @@ Second is a putting them in order.
 
 
 \subsection{Sorting average raitings}
-In 2008 Owen O'Malley won TeraByte sorting competion using Apache Hadoop
-- Java framework which process data using MapReduce. TeraSort offers
-high scalability whitout adding overhead and overall complexity.
-
-In paper Minimal MapReduce Algorithms TeraSort was classified as 
+In 2008 Owen O'Malley won TeraByte sorting competition using Apache Hadoop
+- Java framework which process data using MapReduce. His solution - called TeraSort offers
+high scalability without adding overhead and overall complexity.
+In paper Minimal MapReduce Algorithms TeraSort was classified as
 minimal MapReduce algorithm. Which definition and properties are given
 here:
 
@@ -56,21 +71,22 @@ and scale our architecture.
 By having our load balanced it also benefits to performance. We can easily adopt amount of machines
 taking part in the computation which allows to easily maintain balance between speed and costs.
 Of course we could just use Quicksort instead of TeraSort - but the constant amount of rounds property
-is highly in favour of TeraSort. It guarantees better effiency and predictiable time of execution.
+is highly in favour of TeraSort. Shuffling is very expensive operation - by limiting amount to constant
+factor we are effectively it is impact or overall performance.
 
 
 \subsection{Calculating average ranking}
-To calculate Moving Average of each movie we again will used TeraSort. 
+To calculate Moving Average of each movie we again will used TeraSort.
 But with modified Round 2. Where instead of sorting items in Reduce phase
-we will calculate average. Since TeraSort by design is prepared to execute 
-sorting procedure in this particiular phase transition is very simple.
+we will calculate average. Since TeraSort by design is prepared to execute
+sorting procedure in this particular phase transition is very simple.
 
-Thanks to fact that each machine contains part of data. And this particiular part contains movies from
-a given range it simplies process a lot. And makes it faster because we do not need to iterate over entire 
+Thanks to fact that each machine contains part of data. And this particular part contains movies from
+a given range it simplifies process a lot. And makes it faster because we do not need to iterate over entire
 input just in specific part.
 Our Moving Average calculation procedure is very simple. Similar to General Approach
-we are using HashMap. Where every new encountred movie is added to HashMap. If it is already 
-present we are adding next raiting to property which holds sum of it and also incrementing counter.
+we are using HashMap. Where every new encountered movie is added to HashMap. If it is already
+present we are adding next rating to property which holds sum of it and also incrementing counter.
 Which are used to calculation average.
 
 
