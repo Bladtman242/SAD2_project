@@ -1,0 +1,48 @@
+\section{Experiment}
+While the modified Count-min sketch algorithm provides an error bound for the
+estimated movie averages, what we are really interested in is how much it
+affects the ordering of the movies when sorted by these estimated averages
+compared to the real averages. In this section, we evaluate the modified
+Count-min sketch algorithm by running it on real-life data, and comparing the
+order it produces with the correct order. 
+
+We quantify the error in ordering by the Kendall tau distance. For a permutation
+of movies $\pi$, we say that $x <_\pi y$ if $x$ comes before $y$ in $\pi$. The
+Kendall tau distance between two orderings of our movie set is then $\mathrm{KT}
+\left(\pi_1,\pi_2\right) = \left|\{x,y\}: x <_{\pi_1} y \wedge y <_{\pi_2}
+x\right|$. The Kendall distance is often normalized to the maximum number of
+inversions between the orderings, $n(n-1)/2$ for $n$ elements. We expect random
+orderings to have a normalized Kendall tau distance of $\frac{1}{2}$, so
+only results with a lower distance can be considered useful.
+
+Our data is sampled from the \texttt{Netflix Prize} data set.
+The full data set contains more than 100 million user ratings, for more than 17
+thousand movies.
+We test the algorithm on two samples of the \texttt{Netflix} data, with 100
+million and 50 million ratings respectively. The ratings are chosen from the
+dataset as follows: Go through the set of movies in order of decreasing rating
+count. Pick each movie, until the desired number of ratings is encountered.
+
+\pgfplotsset{scaled x ticks=false}
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+	title=Count-min order error,
+	xlabel={Error bound $\varepsilon$},
+	ylabel={KT. norm.},
+	legend pos=south east,
+	xticklabel style={
+		/pgf/number format/.cd,
+		fixed,
+		fixed zerofill,
+		precision=2,
+		/tikz/.cd
+	},
+]
+\addplot table [y=100M,x=E]{allresults};
+\addlegendentry{100M ratings}
+\addplot table [y=50M,x=E]{allresults};
+\addlegendentry{50M ratings}
+\end{axis}
+\end{tikzpicture}
+\end{center}

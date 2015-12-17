@@ -200,16 +200,29 @@ running averages will break the proofs.
 Sketching lets us sacrifice exactness for lower memory consumption, without
 having to worry about loosing entire movies from the solution. We pay for this
 with an error bound that depends on $|S|$.
+
 The count-min sketch algorithm as described in \texttt{Ikonomovska\--Zelke}
 estimates the frequency vector of the stream, using
 $O(\log(1/\delta)/\varepsilon + \log n \cdot \log(1/\delta))$ working memory.
 Where $\varepsilon$ determines the expected error $\varepsilon \cdot |S| /2$, of
 each frequency and $\delta$ is the probability of the actual error exceeding
-that bound. A simple adaption of their algorithm to our problem (estimating
-averages, not frequencies) is to run two instances of the algorithm in parallel,
-estimating respectively the sum of ratings for each movie $R_j$ and the count of ratings for
-each movie $C_j$. We can then get an estimate of the average rating for a movie
-$j$ by $R_j/C_j$.
+that bound. The error is guaranteed to be positive i.e. the algorithm cannot
+underestimate the actual frequencies. A simple adaption of the algorithm to our
+problem (estimating averages, not frequencies) is to run two instances of the
+algorithm in parallel, estimating respectively the sum and frequency of ratings
+for each movie. We denote the actual sum and frequency for a movie $j$ by $R_j$
+and $F_j$, and the estimates produced by the algorithm $\bar{R_j}$ and
+$\bar{F_j}$ We can then get an estimate of the average rating for a movie $j$ by
+$\bar{R_j}/\bar{C_j}$.
+If we use the same set of hashing functions and
+vector lengths for sketching $R_j$ and $C_j$, we see that
+$R_j-\bar{R_j} \le F_j-\bar{F_j}$. Hence, the resulting error is
+positive, unless ... . This guarantee only holds because our ratings are
+defined to be positive. This also shows
+$$\frac{R_j}{F_j} \le \frac{\bar{R_j}}{\bar{F_j}} \le \frac{\epsilon_r \cdot
+R_j}{\epsilon_f \cdot F_j}$$
+Where $\epsilon_f$ is our error bound $\varepsilon \cdot |S|/2$, and
+$\epsilon_r$ is $\epsilon_f$ times the maximum rating (10, in our case).
 
 \begin{quote}
 	DRAFT NOTE: this is a very simplified analysis.
