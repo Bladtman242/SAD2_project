@@ -1,4 +1,4 @@
-\section{General approach}
+\section{Sorting the Input}
 As mentioned in section \ref{sec:intro_real}, the simplest solution seems to be
 ignoring the dynamic nature of the problem. We could simply add each input pair
 $(j,r)$ to a list, at $O(1)$ cost per input, and then when queried:
@@ -10,7 +10,9 @@ $(j,r)$ to a list, at $O(1)$ cost per input, and then when queried:
 \end{enumerate}
 
 This is obviously bad, as queries will take $O(|S| \log |S| + |U| \log|U|)$
-time. Reassuming the dynamic approach, we can trivially improve this algorithm
+time.
+\subsection{Sorting dynamically}
+Reassuming the dynamic approach, we can trivially improve this algorithm
 by maintaining a hash table of running averages, updating the relevant value for
 each input. Now queries are just $O(|U| \log |U|)$, and processing each input
 element is $O(1)$. This is the lower bound for comparison based sorting, but we
@@ -18,7 +20,7 @@ may choose to prioritize a faster query time, in exchange for slower per-element
 processing. This can be done by maintaining an always-ordered data structure of
 $(j, \overline r)$ pairs, ordered by $\overline r$, being the running average of
 ratings for $j$. While we can obviously do this using insertion sort, we can
-improve on the resulting $O(U)$ per-element cost, without degrading the $O(U)$
+improve on the resulting $O(|U|)$ per-element cost, without degrading the $O(|U|)$
 query time it provides. This can be achieved by maintaining a binary search-tree
 instead of a list, taking care not to delete nodes with equal average, if they
 pertain to different movies, and to never keep more than one node for each
