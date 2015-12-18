@@ -17,16 +17,18 @@ only results with a lower distance can be considered useful.
 
 \subsection{Results}
 Our data is sampled from the \textit{Netflix
-Prize}(http://academictorrents.com/details/9b13183dc4d60676b773c9e2cd6de5e5542cee9a) data set.
+Prize}\footnotemark \ data set.
 The full data set contains more than 100 million user ratings, for more than 17
 thousand movies.
 We test the algorithm on three samples of the \texttt{Netflix} data:
+
+\footnotetext{http://academictorrents.com/details/9b13183dc4d60676b773c9e2cd6de5e5542cee9a}
 \begin{itemize}
-	\item \textit{100m ratings} contains all ratings for the $13726$ most
+	\item \textit{100; ratings} contains all ratings for the $13726$ most
 		frequently rated movies. Roughly 100 million ratings total,
 	\item \textit{50Mmin ratings} contains all ratings for the $17146$ least
 		frequently rated movies. Roughly 50 million ratings total,
-	\item \textit{50m ratings} contains all ratings for the $611$ most
+	\item \textit{50M ratings} contains all ratings for the $611$ most
 		frequently rated movies. Roughly 50 million ratings total,
 	\item \textit{min10K ratings} contains all ratings for the $2042$ movies that have more
 		than $10.000$ ratings.
@@ -45,7 +47,7 @@ We test the algorithm on three samples of the \texttt{Netflix} data:
 		/pgf/number format/.cd,
 		fixed,
 		fixed zerofill,
-		precision=2,
+		precision=3,
 		/tikz/.cd
 	},
 ]
@@ -61,32 +63,29 @@ We test the algorithm on three samples of the \texttt{Netflix} data:
 \end{tikzpicture}
 \end{center}
 
-\subsection{100m ratings}		
-As we can see the first plot - $100M raitings$ show how badly algorithm worked for this data set.
-The Kendall-Tau value starts from $0.35$ and rapidly grows in direction to $0.5$. Which is very bad.
-This behaviour is caused by length of the stream - longer it is more worse results we get. And by the fact
-that the 100 millions is basicaly our entire data set. So the number of raitings per movie differs.
+All trials are run with $\delta = 0.01$.
 
-\subsection{50Mmin ratings}	
-Same trends as in $100m raitings$ is present in $50Mmin raitings$. Again we are working on relatively big set. But this time it contains
-only the movies which were least rated. Even with the fact we are working on half smaller set we still gets poor results. We cannot 
-achieve good result with set which contains rarely rated movies.
+As expected, the algorithm performs much worse on the large, $100M raitings$
+dataset than on the smaller data sets.
+For $\varepsilon = 0.001$, the normalized Kendall-Tau distance is $0.33$, and it
+rapidly approaches $0.5$.
 
-\subsection{50m ratings}
-Again we are working on smaller set. But this time we have the most frequently rated movies. Difference in shape of plot is huge.
-It starts from Kendall-Tau distance equal $0$ where the previous two data sets started with 0.3 more. Even for higher error bounds 
-the results ale still better. 
+The obvious explanation is the error's dependency on the length of the stream,
+but there is another factor at play.
 
-\subsection{min10K ratings}
-Last which produced best results. Which contains only $10$ tousands movies with high amount of raitings. Shape of plot is similar to 
-$50min raitings$ but slight better by average $0.20$ normalized Kendall-Tau distance. Probably thanks to fact the stream is smaller than
-$50m raitings$. 
+Because of the way the Count-Min algorithm works --- adding up the ratings when the
+hash functions have collisions --- there is a tendency that movies with fewer
+ratings will cause inversions more often than movies with many ratings.
+Futhermore, we see that that the algorithm performs reasonable well in the two
+other data sets, containing only movies with many ratings.
 
-
+We see however, that in order to save memory compared to the simple
+approaches described in section \ref{sec:sorting}, we have to accept a
+normalized Kendall tau distance of at least $0.1$, or choose a higher value for $\delta$
 
 \subsection{Implementation}
-The implementation can be found in \texttt{code} folder that came with this
-report. We Note that the implementation does not live up to the performance
+The implementation can be found in the appendices.
+We Note that the implementation does not live up to the performance
 bounds stated in section \ref{sec:sketching}. This is not a problem, since we
 are assessing the correctness of the algorithm, not it's throughput. The
 implementation differs in two ways: To emulate querying all data points, a list
