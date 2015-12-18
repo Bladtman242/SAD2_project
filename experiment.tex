@@ -64,8 +64,8 @@ We test the algorithm on three samples of the \texttt{Netflix} data:
 \subsection{100m ratings}		
 As we can see the first plot - $100M raitings$ show how badly algorithm worked for this data set.
 The Kendall-Tau value starts from $0.35$ and rapidly grows in direction to $0.5$. Which is very bad.
-This behaviour is caused by length of the stream - longer it is more worse results we get. And by the fact
-that the 100 millions is basicaly our entire data set. So the number of raitings per movie differs.
+By the fact that the 100 millions is basicaly our entire data set. So the number of ratings per movie can differ significantly.
+Also is - as we expected - by length of the stream, longer it is more worse results we get.
 
 \subsection{50Mmin ratings}	
 Same trends as in $100m raitings$ is present in $50Mmin raitings$. Again we are working on relatively big set. But this time it contains
@@ -81,8 +81,6 @@ the results ale still better.
 Last which produced best results. Which contains only $10$ tousands movies with high amount of raitings. Shape of plot is similar to 
 $50min raitings$ but slight better by average $0.20$ normalized Kendall-Tau distance. Probably thanks to fact the stream is smaller than
 $50m raitings$. 
-
-
 
 \subsection{Implementation}
 The implementation can be found in \texttt{code} folder that came with this

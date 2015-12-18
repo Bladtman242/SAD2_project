@@ -1,15 +1,10 @@
 \subsection{Parallelization}
-Utilizing power of multicore architecture in this scope is very tempting.
-But our current approach is not supportive. By using data structure like Binary Tree
-or Heap in a single thread scenario we are receiving multiple benefits like logarithmic time 
-for insertion for each element or limited space usage. For each new element we have to only perform
-insertion with logarithmic cost. For scenario when we are interested in intermidiate results it is 
-a very big adventage against sorting algorithms like QuickSort or MergeSort.
-
-But these algorithms have adventage over data structure based sorting - they are much
-more prone to Parallelization. Depending on the architecture or use case even in light 
-of need processing partial input it might be profitiable to resort our data multiple
-time using benefits of multicore, multithreaded computing if time is our main constraint.
-
+Utilizing power of multi core architecture in this scope is always tempting.
+Our basic approach can benefit from multithreaded computing - computing averages
+rating of movie and sorting them are solid candidates for being paralyzed.
+But parallelization is not solving your concerns like memory constraints - it makes
+them even bigger. Each thread is a drawback. We can achieve speedup but it takes more
+memory. For large datasets it might even be impossible to perform it. That's why we
+are redirecting our attention to techniques like Streaming and MapReduce.
 
 
