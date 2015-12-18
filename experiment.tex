@@ -24,11 +24,12 @@ We test the algorithm on three samples of the \texttt{Netflix} data:
 \begin{itemize}
 	\item \textit{100m ratings} contains all ratings for the $13726$ most
 		frequently rated movies. Roughly 100 million ratings total,
+	\item \textit{50Mmin ratings} contains all ratings for the $17146$ least
+		frequently rated movies. Roughly 50 million ratings total,
 	\item \textit{50m ratings} contains all ratings for the $611$ most
 		frequently rated movies. Roughly 50 million ratings total,
 	\item \textit{min10K ratings} contains all ratings for the $2042$ movies that have more
 		than $10.000$ ratings.
-
 
 \end{itemize}
 
@@ -59,6 +60,29 @@ We test the algorithm on three samples of the \texttt{Netflix} data:
 \end{axis}
 \end{tikzpicture}
 \end{center}
+
+\subsection{100m ratings}		
+As we can see the first plot - $100M raitings$ show how badly algorithm worked for this data set.
+The Kendall-Tau value starts from $0.35$ and rapidly grows in direction to $0.5$. Which is very bad.
+This behaviour is caused by length of the stream - longer it is more worse results we get. And by the fact
+that the 100 millions is basicaly our entire data set. So the number of raitings per movie differs.
+
+\subsection{50Mmin ratings}	
+Same trends as in $100m raitings$ is present in $50Mmin raitings$. Again we are working on relatively big set. But this time it contains
+only the movies which were least rated. Even with the fact we are working on half smaller set we still gets poor results. We cannot 
+achieve good result with set which contains rarely rated movies.
+
+\subsection{50m ratings}
+Again we are working on smaller set. But this time we have the most frequently rated movies. Difference in shape of plot is huge.
+It starts from Kendall-Tau distance equal $0$ where the previous two data sets started with 0.3 more. Even for higher error bounds 
+the results ale still better. 
+
+\subsection{min10K ratings}
+Last which produced best results. Which contains only $10$ tousands movies with high amount of raitings. Shape of plot is similar to 
+$50min raitings$ but slight better by average $0.20$ normalized Kendall-Tau distance. Probably thanks to fact the stream is smaller than
+$50m raitings$. 
+
+
 
 \subsection{Implementation}
 The implementation can be found in \texttt{code} folder that came with this
