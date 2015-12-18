@@ -1,5 +1,9 @@
 ﻿using System;
-
+/******************************************************************************
+ *  Based on http://algs4.cs.princeton.edu/25applications/KendallTau.java.html
+ *  Copyright © 2002–2014 Robert Sedgewick and Kevin Wayne. All rights reserved.
+ *  
+ ******************************************************************************/
 namespace SAD2.KendallTauDistance
 {
 	public class Inversions
