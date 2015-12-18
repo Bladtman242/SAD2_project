@@ -37,6 +37,7 @@ The rest of this section discusses techniques that alleviate these problems
 with different trade-offs.
 
 \subsection{Order Maintenance}
+\ref{sec:ordermaint}
 In the simple algorithm, results were not \textit{current}, because every query
 required a sort of the frequency vector --- which is long. If we allow ourselves
 to use more than constant processing time per stream element, this problem can
@@ -116,13 +117,6 @@ way. However, if we limit our problem to find the top-l movies, we can.
 
 %As described in \texttt{Ikonomovska et al.(2013)}\citep{ikonomovskazelke}: we can adjust the quality of
 %the result by adjusting $k$ as following.
-%If 
-\begin{quote}
-	DRAFT NOTE: This would be a good place to analyze the quality of the
-	solution --- in terms of $k$
-	%In that case, it should be shown that it still holds (or not) after
-	%changing the sampling method in the following paragraph
-\end{quote}
 
 If we alter our running-average sampling to replace the \textit{smallest}
 sample, instead picking one at random, the probability of our $k$ samples
@@ -190,13 +184,9 @@ maintain running averages instead of frequencies. This presents a problem
 however. The proofs for the presented lemmas and theorems depend on the fact
 fact that each replacement in the sample-set increments the counter by $1$. But
 incrementing by $1$ will not provide us with running averages. Hence, keeping
-running averages will break the proofs. 
-
-\begin{quote}
-	DRAFT NOTE: Now actually adapt it
-	to the running averages, and analyse it.
-	Also mention it's relation to sketching.
-\end{quote}
+running averages will break the proofs. For this approach to be valuable in our
+setting, it remains to provide new error bounds, or modify the algorithm so that
+the ones from \texttt{Metwally} holds.
 
 \subsection{Approximation based on Sketching}
 \label{sec:sketching}
@@ -205,7 +195,7 @@ Sketching lets us sacrifice exactness for lower memory consumption, without
 having to worry about loosing entire movies from the solution. We pay for this
 with an error bound that is linear in $|S|$.
 
-The count-min sketch algorithm as described in {\texttt{Ikonomovska et al.(2013)}\citep{ikonomovskazelke}: 
+The count-min sketch algorithm as described in {\texttt{Ikonomovska et al.(2013)}\citep{ikonomovskazelke}
 estimates the frequency vector of the stream, using
 $O(\log(1/\delta)/\varepsilon + \log n \cdot \log(1/\delta))$ working memory.
 Where $\varepsilon$ determines the expected error $\varepsilon \cdot |S| /2$, of
@@ -221,15 +211,12 @@ $\bar{R_j}/\bar{C_j}$.
 If we use the same set of hashing functions and
 vector lengths for sketching $R_j$ and $C_j$, we see that
 $R_j-\bar{R_j} \le F_j-\bar{F_j}$. Hence, the resulting error is
-positive, unless ... . This guarantee only holds because our ratings are
+positive. This guarantee only holds because our ratings are
 defined to be positive. This also shows
 $$\frac{R_j}{F_j} \le \frac{\bar{R_j}}{\bar{F_j}} \le \frac{\epsilon_r \cdot
 R_j}{\epsilon_f \cdot F_j}$$
 Where $\epsilon_f$ is our error bound $\varepsilon \cdot |S|/2$, and
 $\epsilon_r$ is $\epsilon_f$ times the maximum rating (10, in our case).
 
-\begin{quote}
-	DRAFT NOTE: this is a very simplified analysis.
-	It would be good to find the actual expectancy of this. Seems like it
-	should be easy, but apparently I'm retarded.
-\end{quote}
+The count-min sketch algorithm can be modified as described in section
+\ref{sec:ordermaint}, to provide fast query times as well.
