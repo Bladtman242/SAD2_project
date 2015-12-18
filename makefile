@@ -10,7 +10,7 @@ $(tmpdir)/$(outputFile): $(inputFile) *.tex $(tmpdir) appendix.pdf
 	pdflatex -output-directory=tmp $<
 	pdflatex -output-directory=tmp $<
 
-appendix.pdf: appendix/appendix.pdf
+appendix.pdf:
 	$(MAKE) -C appendix/
 	cp appendix/appendix.pdf .
 
