@@ -24,6 +24,7 @@
 \let\oldpct\%
 \renewcommand{\%}{\scalebox{.9}{\oldpct}}
 \begin{document}
+\setcounter{chapter}{1}
 
 \title{SAD2 exam report}
 \author{
@@ -89,8 +90,12 @@ We explore different streaming algorithms, in an attempt to achieve sublinear
 memory bounds.
 
 We then present experimental results, measuring the error in the
-global rank resulting from estimating rating averages. Finally, we go out on a
-limb, describe a simple TerraSort-based \texttt{MapReduce} solution.
+global rank resulting from estimating rating averages. Finally, we go a little
+crazy \footnotemark
+, and describe a simple TerraSort-based MapReduce solution.
+
+\footnotetext{It seems unlikely that there exists a data set of movie ratings,
+large enough to justify using MapReduce to sort them}
 
 We choose algorithms to analyze based on time- and space- complexity, currency,
 and the quality/correctness of the solutions in case of approximation
