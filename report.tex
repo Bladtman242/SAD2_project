@@ -1,6 +1,16 @@
 \documentclass[a4paper, titlepage]{report}
-\usepackage[utf8]{inputenc}
+\usepackage{inputenc}
 \usepackage{pgfplots}
+\usepackage{listings,xcolor}
+\lstset{
+	language={[Sharp]C},
+	breaklines=true,
+	keywordstyle=\color{blue},
+	identifierstyle=\color{red},
+	showstringspaces=false,
+	basicstyle=\small,
+}
+\usepackage{geometry}
 \usepackage{tikz}
 \usepackage[square,sort,comma,numbers]{natbib}
 \pgfplotsset{compat=1.5}
@@ -136,6 +146,5 @@ matters, though they will often be closely related.
 
 \newpage
 \input{./appendix.tex}
-\chapter{Kendall tau}
 
 \end{document}
