@@ -1,5 +1,5 @@
 \chapter{Extension}
-\section{Map Reduce based Approach}
+\section{A Distributed Sort}
 Many problems can be solved faster by parallelizing computation. At the extreme
 end of the parallelization spectrum lies distributed computing, where
 computation is distributed not among cores of a processor, but among individual
@@ -14,27 +14,38 @@ for movie ratings. The full \texttt{IMDB} data set consists of less than
 have $\sim 1.5 \times 10^6$ ratings each). A rating is a number
 $\left(\left[1,10\right]\cap \mathbb{N}\right)$, which can be stored in
 $\lceil \log(10)\rceil = 4$ bits, which means the full set of ratings can be
-stored in less than $47$ GB.
+stored in less than $47$ GB. However, our \texttt{IMDB} motivation can be
+directly translated to e.g. sensory network data, with the possible exception of
+the small domain size, which we will not rely on in this section.
 
-
-In light of constantly growing datasets solving even 
-most basic computational problems becomes more difficult and complex.
-One of the attempts to adress this need is a model called MapReduce.
-Which allows processing in a parallel, distributed manner.
+We describe a simple MapReduce algorithm that provides an exact solution to our
+sorted-averages problem, and does so in a constant number of rounds. To achieve
+constant-round sorting, we use the TeraSort algorithm \texttt{Owen O'Mally
+(2008)}\citep{terabytesort} \texttt{Yufei Tao et
+al.(2013)}\citep{minimalmapreduce}.
 
 \subsection{MapReduce}
 MapReduce takes advantage of locality of data - by processing it on 
 or near the storage assets in order to minimize network, space, IO, CPU cost on each machine.
-Execution in conducted in rounds. Each one of them has three phases:
+A single MapReduce round consists of three phases:
 
-\begin{itemize}
-\item Map: preprocess the data which will be delievered to each machine by applying 
-given function to each element. 
-\item Shuffle: it is responsible for actual data transfer. Data redistribiution is based on 
-keys generated in Map phase. Data belonging to the one key are directed to same machine. 
-\item Reduce: each machine process given load. There is no network traffic or sharing between machines
-in Reduce phase.
-\end{itemize}
+\begin{description}
+	\item [Mapping] A function, or \textit{mapping}, is executed on each $(key,
+		value)$ pair, resulting in a new set of $(key,value)$ pairs
+	\item [Shuffling] The pairs emitted in the mapping phase are redistributed among
+		the machines. Pairs are distributed so that every pair the
+		same key is send to the same machine. We will rely on a stronger
+		guarantee.
+	\item [Reducing] A reducer, or \textit{fold}, is applied to each $(key,
+		\{values\})$ pair.
+\end{description}
+
+Generally, the map and reduce functions are provided by the programmer, and the
+framework handles shuffling. The TeraSort algorithm relying on the shuffling
+phase to distribute keys so that the machines constitute a partial sort over the
+keys. That is, for a sorted sample $samp$ over the keys, where $|samp|$ is equal to the
+number of reducers, all keys such that $samp_{i-1} \le key \le samp_i$ are send
+to the $i$th reducer \citep{minimalmapreduce} 
 
 \subsection{Two subproblems}
 Our problem of creating ranking of movies based on the user raiting 
