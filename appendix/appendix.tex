@@ -1,3 +1,23 @@
+\documentclass[a4paper]{report}
+\usepackage{inputenc}
+\usepackage{listings,xcolor}
+\lstset{
+	language={[Sharp]C},
+	breaklines=true,
+	keywordstyle=\color{blue},
+	identifierstyle=\color{red},
+	backgroundcolor=\color{yellow!20},
+	showstringspaces=false,
+	basicstyle=\small,
+}
+\usepackage{geometry}
+\usepackage{courier} % Required for the courier font
+\usepackage[bookmarks]{hyperref}
+\usepackage{amsfonts}
+
+\begin{document}
+
+
 \newgeometry{margin=0.5in}
 \appendix
 \chapter{Simple Sorting}
@@ -33,3 +53,4 @@
 \newpage
 \section{KendallTau.cs}
 \lstinputlisting{code/sorting/kendalltau/KendallTau.cs}
+\end{document}

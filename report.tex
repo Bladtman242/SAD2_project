@@ -1,12 +1,14 @@
 \documentclass[a4paper, titlepage]{report}
-\usepackage{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage{pgfplots}
+\usepackage{pdfpages}
 \usepackage{listings,xcolor}
 \lstset{
 	language={[Sharp]C},
 	breaklines=true,
 	keywordstyle=\color{blue},
 	identifierstyle=\color{red},
+	backgroundcolor=\color{yellow!20},
 	showstringspaces=false,
 	basicstyle=\small,
 }
@@ -145,6 +147,6 @@ matters, though they will often be closely related.
 \input{./biblography.tex}
 
 \newpage
-\input{./appendix.tex}
-
+\addcontentsline{toc}{chapter}{Appendices}
+\includepdf[pages=-]{appendix.pdf}
 \end{document}
