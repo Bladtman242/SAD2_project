@@ -25,8 +25,10 @@ constant-round sorting, we use the TeraSort algorithm \texttt{Owen O'Mally
 al.(2013)}\citep{minimalmapreduce}.
 
 \subsection{MapReduce}
+\label{sec:mapreduce}
 MapReduce takes advantage of locality of data - by processing it on 
 or near the storage assets in order to minimize network, space, IO, CPU cost on each machine.
+Each round of MapReduce takes input in the form of $(key,value)$) pairs.
 A single MapReduce round consists of three phases:
 
 \begin{description}
@@ -43,49 +45,65 @@ A single MapReduce round consists of three phases:
 Generally, the map and reduce functions are provided by the programmer, and the
 framework handles shuffling. The TeraSort algorithm relying on the shuffling
 phase to distribute keys so that the machines constitute a partial sort over the
-keys. That is, for a sorted sample $samp$ over the keys, where $|samp|$ is equal to the
-number of reducers, all keys such that $samp_{i-1} \le key \le samp_i$ are send
-to the $i$th reducer \citep{minimalmapreduce} 
+keys. That is, for a sorted, random sample $samp$ over the keys, where $|samp|$ is equal to the
+number of reducers $M$, all keys such that $samp_{i-1} \le key \le samp_i$ are send
+to the $i$th reducer. Rather than imposing this
+requirement on the framework, we can invent an operation
+\textit[map-shuffle], that is allowed to decide which reducer it sends $(key,
+value)$ pairs to after mapping. These two abstractions are equivalent for the
+purpose of TeraSort \citep{minimalmapreduce}.
 
 \subsection{Two subproblems}
-Our problem of creating ranking of movies based on the user raiting 
-consist two subproblems. First one is creation of averages movie rate.
-Second is a putting them in order. 
+Our problem of ranking movies based on averaged ratings
+consist two subproblems. We need to to calculate the averages, and sort the
+result.
 
-\subsection{Calculating average ranking}
-To calculate Moving Average of each movie we again will used TeraSort.
-But with modified Round 2. Where instead of sorting items in Reduce phase
-we will calculate average. Since TeraSort by design is prepared to execute
-sorting procedure in this particular phase transition is very simple.
+\subsection{Calculating the Average Ratings}
+We can calculate the averages in one MapReduce round.
 
-\subsection{Sorting using TeraSort}
-Thanks to fact that each machine contains part of data. And this particular part contains movies from
-a given range it simplifies process a lot. And makes it faster because we do not need to iterate over entire
-input just in specific part.
-Our Moving Average calculation procedure is very simple. Similar to General Approach
-we are using HashMap. Where every new encountered movie is added to HashMap. If it is already
-present we are adding next rating to property which holds sum of it and also incrementing counter.
-Which are used to calculation average.
+The mapper simply emits the pairs in the input.
 
-\subsection{Sorting average raitings}
-In 2008 Owen O'Malley won TeraByte sorting competition using Apache Hadoop
-- Java framework which process data using MapReduce. His solution - called TeraSort offers
-high scalability without adding overhead and overall complexity.
+Each reducer then receives a list of $(j, \{r_1 \ldots r_n\})$ pairs: a movie id
+$j$, and all ratings of it. The reducer then calculates the average rating for
+each $j$, and emits a $(j, \bar{r})$ pair for each pair in the input.
+This round does not rely on the special shuffle step as TeraSort does, but is
+not hindered by it.
 
-First the algorithm starts with dividing load between each machine. Then takes sample 
-out of each one and sends to one given machine where they are sorted.
-Then utilize it in order to create "boundary objects" and redistribiutes them
-to all machines. Using the infromation contained in boundary objects 
-machine are exchaning data from local storages.
-One that is done each machine is sorting local data which completes process of sorting.
+\subsection{TeraSort}
+TeraSort can be thought of as a parallel, randomized quicksort with a cut-off to a
+non-distributed sort.
+
+The algorithm consists of two rounds of MapReduce.
+\begin{description}
+	\item[Round 1]
+		Each mapper produces a random sample of it's inputs.
+
+		Reducing all pairs on a single machine, the sample is sorted,
+		and $b_1, \ldots, b_M-1$ elements are chosen from it, such that
+		$b_i$ is the $\lceil |samp|/M \rceil $th smallest element in
+		$samp$. Each $b_i$ is used as a partitioning element when the
+		pairs are distributed in the next round.
+	\item[Round 2]
+		The \texttt{map-shuffle} step distributes it's inputs among the
+		reducers, according to the partitioning elements produced in
+		round 1.
+
+		Each reducer uses a "normal" sort to sort it's inputs. Now, each
+		reducers output is sorted internally, and we know the
+		machine-ordering, since we know the partitioning elements, hence
+		we know the total ordering of the data.
+
+\end{description}
+
+Together, the averaging and sorting requires three MapReduce rounds.
 
 In paper Minimal MapReduce Algorithms TeraSort was classified as
 minimal MapReduce algorithm. Which definition and properties are given
 here:
 
-
 \texttt{Tao et al. (2013)}\citep{minimalmapreduce}:
 
+\begin{quote}
 "Denote by $S$ the set of input objects 
 for the underlying problem. Let n, the problem cardinality,
 be the number of objects in $S$, and $t$ be the number of machines
@@ -94,6 +112,7 @@ of objects per machine when $S$ is evenly distributed across the
 machines. Consider an algorithm for solving a problem on $S$.
 We say that the algorithm is minimal if it has all of the following
 properties.
+\end{quote}
 
 \begin{itemize}
 \item \emph{Minimum footprint}: at all times, each machine uses only
@@ -112,14 +131,17 @@ in parallel."
 \end{itemize}
 
 
-\subsection{Benefits of TeraSort}
-Which perfectly denotes main advantages of the TeraSort. The minimum footprint property guarantees
-that each of our machines will use the same amount of memory. Which makes profiling
-and planning infractures much easier. The same hold for network throughput - by knowing
-upper bound how much data will be transferred in the process we easily can track bottlenecks
-and scale our architecture.
-By having our load balanced it also benefits to performance. We can easily adopt amount of machines
-taking part in the computation which allows to easily maintain balance between speed and costs.
-Of course we could just use Quicksort instead of TeraSort - but the constant amount of rounds property
-is highly in favour of TeraSort. Shuffling is very expensive operation - by limiting amount to constant
-factor we are effectively it is impact or overall performance.
+\subsection{}
+For good sampling rates in round 1, Terasort is minimal \texttt{Tao et al.
+(2013)}\citep{minimalmapreduce}. It is easy to see that the first part ---
+averging ratings --- is too, as no phases are super-linear in their input size,
+and no phases produce an output larger than it's input.
+
+The minimum footprint
+property guarantees that no machine needs more than $(m)$ storagej
+memory. Which means the memory consumption of each machine down-scales linearly
+with the number of machines used. The same
+hold for network throughput and processing time per machine
+Using a constant number of rounds is an important property in the MapReduce
+model. Shuffling is a very expensive operation, both in time and network
+traffic.
