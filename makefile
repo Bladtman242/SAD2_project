@@ -1,6 +1,7 @@
 inputFile = report.tex
 outputFile = report.pdf
 tmpdir = tmp
+.PHONY: appendix.pdf
 
 $(outputFile): $(tmpdir)/$(outputFile)
 	cp $< $@
