@@ -5,8 +5,17 @@ end of the parallelization spectrum lies distributed computing, where
 computation is distributed not among cores of a processor, but among individual
 computers, each with their permanent storage, memory and processors.
 
-MapReduce is model for distributing computation across many (hundredths or thousands) of
-computers
+MapReduce is model for distributing computation across many (hundredths or
+thousands) of computers. This distribution often comes with a significant
+overhead, and so it usually only pays off for data sets that are too large to
+store on a single machine. It seems improbable that such a data set should exist
+for movie ratings. The full \texttt{IMDB} data set consists of less than
+100 billion ratings ($\sim 1.5 \times 10^6$, the most frequently rated of which
+have $\sim 1.5 \times 10^6$ ratings each). A rating is a number
+$\left(\left[1,10\right]\cap \mathbb{N}\right)$, which can be stored in
+$\lceil \log(10)\rceil = 4$ bits, which means the full set of ratings can be
+stored in less than $47$ GB.
+
 
 In light of constantly growing datasets solving even 
 most basic computational problems becomes more difficult and complex.
