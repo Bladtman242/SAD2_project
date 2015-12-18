@@ -22,7 +22,6 @@ namespace SAD2.GeneralApproach
 			foreach(Movie m in moviesByAvg){
 				Console.WriteLine(m.Id + "," +m.Rating/m.Occurences);
 			}
-			//Console.WriteLine(KendallTauDistance.KendallTau.Distance(something.ToArray(), bb.ToArray()));
 		}
 
 		private static IEnumerable<Movie> GeneralApproach(IEnumerable<string> lines)
